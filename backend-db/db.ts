@@ -1,12 +1,17 @@
-import * as mysql from "mysql2"
+import mysql, { PoolOptions } from 'mysql2';
 
-const connection: mysql.Connection = mysql.createConnection({
-    "host": "localhost",
-    "user": "root",
-    "password": ""
-})
+const access: PoolOptions = {
+    user: 'root',
+    database: 'DAYJOB',
+    host: 'localhost',
+    port: 3306,
+    password: '4779'
+};
 
-connection.connect((err: mysql.QueryError | null) => {
-    if (err) throw err
-    console.log('connected!')
-})
+const conn = mysql.createPool(access);
+
+const sql: string = ''
+
+const result = conn.execute(sql)
+
+// console.log(result.)
