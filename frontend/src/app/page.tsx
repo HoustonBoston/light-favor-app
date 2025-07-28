@@ -8,13 +8,13 @@ import HWPart from "@/components/HWPart";
 import { Part } from "@/Objects/Part";
 import { Dayjob } from "@/Objects/Dayjob";
 
-import { save_dayjob_info } from "../../../backend-db/db"
+import { save_dayjob_info } from "../../backend-db/db";
 
 function Page ()
 {
   useEffect(() =>
   {
-    save_dayjob_info()
+    // fetch("localhost:3000/api/post")
   }, [])
 
   const [dayjob, setDayjob] = useState<Dayjob>({
@@ -44,9 +44,7 @@ function Page ()
 
   const handleSave = () =>
   {
-    const dj_num = document.getElementById('dj-num')
-    const dj_serial_num = document.getElementById('dj-serial-num')
-
+    console.log(save_dayjob_info(dayjob))
   }
 
   const onDayjobInfoChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -104,7 +102,7 @@ function Page ()
         </div>
 
         <div id="button-div" className="mt-5 flex justify-end">
-          <button type="submit" className="cursor-pointer">Save</button>
+          <button onClick={handleSave} type="submit" className="cursor-pointer">Save</button>
         </div>
 
       </div>
