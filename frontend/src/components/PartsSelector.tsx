@@ -20,10 +20,12 @@ export default function PartsSelector ({
                             <option value="BV">BV</option>
                         </select>
                     </td>
-                    <button className="pl-2 font-bold cursor-pointer flex items-center" onClick={onAddClick}>
-                        <label className="hover:text-blue-600 cursor-pointer">Add</label>
-                        <Image src={plusSign.src} alt="plus sign" width={20} height={10} className="pl-1" />
-                    </button>
+                    <td>
+                        <button className="pl-2 font-bold cursor-pointer flex items-center" onClick={onAddClick}>
+                            <label className="hover:text-blue-600 cursor-pointer">Add</label>
+                            <Image src={plusSign.src} alt="plus sign" width={20} height={10} className="pl-1" />
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

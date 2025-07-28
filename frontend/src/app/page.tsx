@@ -1,23 +1,62 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputTemplate from "../components/InputTemplate"
 import PartsSelector from "@/components/PartsSelector";
 import HWPart from "@/components/HWPart";
 
+import { Part } from "@/Objects/Part";
+import { Dayjob } from "@/Objects/Dayjob";
+
+import { save_dayjob_info } from "../../../backend-db/db"
+
 function Page ()
 {
-  const [parts, setParts] = useState<string[]>([])  // initial state is empty
+  useEffect(() =>
+  {
+    save_dayjob_info()
+  }, [])
 
-  const handleAdd = () =>
+  const [dayjob, setDayjob] = useState<Dayjob>({
+    dayjob_num: 123,
+    dayjob_serial_num: 123,
+    parts: [],
+    user_id: "user",
+    date: Date.now(),
+    id: 123
+  })  // initial state is empty
+
+  const [partObjArr, setPartObjArr] = useState<Part[]>([])
+
+  const handleAddPart = async () =>
   {
     const dropdown = document.getElementById('parts-dropdown') as HTMLSelectElement
 
     if (dropdown) {
-      const selectedVal = dropdown.value
-      setParts(prev => [...prev, selectedVal])
-      console.log('parts updated')
+      const selectedPart = dropdown.value
+      await setPartObjArr(prev => [...prev, { type: selectedPart, part_num: null, part_serial_num: null }])
+      await setDayjob(prev => (
+        { ...prev, parts: partObjArr }
+      ))
+      await console.log('parts object arr: ', partObjArr)
     }
+  }
+
+  const handleSave = () =>
+  {
+    const dj_num = document.getElementById('dj-num')
+    const dj_serial_num = document.getElementById('dj-serial-num')
+
+  }
+
+  const onDayjobInfoChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  {
+    const { name, value } = e.target
+    setDayjob(prev => (
+      { ...prev, [name]: value }
+    ))
+
+    console.log('changed field: ', name, ' changed value: ', value)
   }
 
   return (
@@ -28,28 +67,33 @@ function Page ()
         <div className="flex gap-10">
           <div id="dj-input">
             <label className="mr-2 font-bold">DJ No</label>
-            <InputTemplate />
+            <InputTemplate name="dayjob_num" id="dj-num" onChange={onDayjobInfoChange} />
           </div>
           <div className="" id="serial-input">
             <label className="mr-2 font-bold">Serial No</label>
-            <InputTemplate />
+            <InputTemplate name="dayjob_serial_num" id="dj-serial-num" onChange={onDayjobInfoChange} />
           </div>
         </div>
 
         <div className="flex justify-center mt-10" id="dropdown-flex-contaienr">
           <div id="dropdown" className=""> {/* Centered horizontally on the page */}
-            <PartsSelector onAddClick={handleAdd} />
+            <PartsSelector onAddClick={handleAddPart} />
           </div>
         </div>
 
-        <div className="mt-15 flex flex-col gap-y-10 relative" id="parts-list">
+        <div className="mt-15 flex flex-col gap-y-10" id="parts-list">
 
           {
-            parts.map((part, idx) =>
+            partObjArr.map((Part, idx) =>
             {
               return (
-                <div id="align-box-delete-button" className="flex items-center" key={idx}>
-                  <HWPart part={part} partsArr={parts} index={idx} setParts={setParts} />
+                <div className="flex items-center" key={idx}>
+                  <HWPart
+                    partObj={Part}
+                    index={idx}
+                    setParts={setPartObjArr}
+                    setDayjob={setDayjob}
+                  />
                 </div>
               )
             }
@@ -57,6 +101,10 @@ function Page ()
           }
 
 
+        </div>
+
+        <div id="button-div" className="mt-5 flex justify-end">
+          <button type="submit" className="cursor-pointer">Save</button>
         </div>
 
       </div>

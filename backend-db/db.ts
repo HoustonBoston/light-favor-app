@@ -1,4 +1,6 @@
 import mysql, { PoolOptions } from 'mysql2';
+import { Dayjob } from "../frontend/src/Objects/Dayjob"
+import { Part } from "../frontend/src/Objects/Part"
 
 const access: PoolOptions = {
     user: 'root',
@@ -10,8 +12,16 @@ const access: PoolOptions = {
 
 const conn = mysql.createPool(access);
 
-const sql: string = ''
 
-const result = conn.execute(sql)
+export function save_dayjob_info() {
+    console.log('from save_dayjob_info')
 
-// console.log(result.)
+}
+
+export function delete_part() {
+
+}
+
+export function update_part() {
+
+}

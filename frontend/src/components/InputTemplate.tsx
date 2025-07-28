@@ -1,7 +1,21 @@
 import { Input } from "@chakra-ui/input"
+import React from "react"
 
-export default function InputTemplate() {
+export default function InputTemplate ({ id, onChange, name }:
+    {
+        id?: string,
+        onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+        name?: string
+    })
+{
     return (
-        <Input placeholder="Enter Text" className="text-center rounded-2xl border placeholder:text-center" />
+        <Input
+            onChange={onChange}
+            required
+            placeholder="Enter Text"
+            className="text-center rounded-2xl border placeholder:text-center"
+            id={id}
+            name={name}
+        />
     )
 }
