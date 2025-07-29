@@ -7,5 +7,5 @@ export interface Dayjob
     parts: Part[];
     user_id: string;
     date: number;
-    id: number;
+    id?: number;
 }

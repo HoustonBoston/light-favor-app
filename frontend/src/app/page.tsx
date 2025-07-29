@@ -22,7 +22,7 @@ function Page ()
     dayjob_serial_num: 123,
     parts: [],
     user_id: "user",
-    date: Date.now(),
+    date: 10,
     id: 123
   })  // initial state is empty
 
@@ -42,10 +42,30 @@ function Page ()
     }
   }
 
-  const handleSave = () =>
+  const handleSave = async () =>
   {
-    console.log(save_dayjob_info(dayjob))
-  }
+    try {
+      const response = await fetch('http://localhost:3000/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dayjob)
+      });
+
+      const result = await response.json();
+
+      console.log(">>> result is " + result)
+
+      if (response.ok) {
+        console.log('Dayjob saved successfully:', result);
+      } else {
+        console.error('Failed to save dayjob:', result.error);
+      }
+    } catch (error) {
+      console.error('Network or unexpected error:', error);
+    }
+  };
 
   const onDayjobInfoChange = (e: React.ChangeEvent<HTMLInputElement>) =>
   {
