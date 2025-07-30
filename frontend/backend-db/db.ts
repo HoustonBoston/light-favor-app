@@ -1,14 +1,13 @@
-import mysql, { PoolOptions, ConnectionOptions } from 'mysql2';
+import mysql, { ConnectionOptions } from 'mysql2';
 import { Dayjob } from "../src/Objects/Dayjob"
-import { Part } from "../src/Objects/Part"
 
-const access1: PoolOptions = {
-    user: 'root',
-    database: 'DAYJOB',
-    host: 'localhost',
-    port: 3306,
-    password: '4779'
-};
+// const access1: PoolOptions = {
+//     user: 'root',
+//     database: 'DAYJOB',
+//     host: 'localhost',
+//     port: 3306,
+//     password: '4779'
+// };
 
 const access: ConnectionOptions = {
     user: 'root',
@@ -21,31 +20,61 @@ const access: ConnectionOptions = {
 
 export async function save_dayjob_info(dayjobObj: Dayjob) {
     const conn = await mysql.createConnection(access).promise();
-    const {date, dayjob_num, dayjob_serial_num, parts, user_id} = dayjobObj
+    const { date, dayjob_num, dayjob_serial_num, parts, user_id, dayjob_id, flag } = dayjobObj
 
-    const sql: string = `INSERT INTO DAYJOB (DAYJOB_DATE, DAYJOB_SERIAL_NUMBER, USER_ID, DAYJOB_NUMBER)
-        VALUES (?, ?, ?, ?)`
+    if (dayjob_id === null) {  // AKA inserted for the first time ever
+        console.log('dayjob_id is null: ', dayjob_id)
 
-    try {
-        const [execResult] = await conn.query<mysql.ResultSetHeader>(sql, [date, dayjob_serial_num, user_id, dayjob_num])
+        try {
+            const sql: string = `INSERT INTO DAYJOB (DAYJOB_DATE, DAYJOB_SERIAL_NUMBER, USER_ID, DAYJOB_NUMBER)
+            VALUES (?, ?, ?, ?)`
+            const [execResult] = await conn.query<mysql.ResultSetHeader>(sql, [date, dayjob_serial_num, user_id, dayjob_num])
+            const dayjob_id = execResult.insertId
+            const partsArray = []
 
-        const dayjob_id = execResult.insertId
+            for (let i = 0; i < parts.length; ++i) {
+                const { part_type, part_num, part_serial_num } = parts[i]
+                partsArray.push([part_type, part_num, part_serial_num, dayjob_id])
+            }
 
-        const partsArray = []
+            try {
+                const sql2: string = `INSERT INTO PARTS (PART_TYPE, PART_NUMBER, PART_SERIAL_NUMBER, DAYJOB_ID) VALUES ?`
+                conn.query(sql2, [partsArray])
+            } catch (err) {
+                console.error('erroring when inserting parts: ', err)
+            }
+
+            return dayjob_id
+        } catch (err) {
+            console.error('errorong when inserting dayjob: ', err)
+        } finally {
+            conn.end()
+        }
+    }
+    else {
+        console.log('dayjob_id is not null: ', dayjob_id)
+
+        const partsToInsertArray = []
+        const partsToUpdateArray = []
 
         for (let i = 0; i < parts.length; ++i) {
-            const { part_type, part_num, part_serial_num } = parts[i]
-            partsArray.push([part_type, part_num, part_serial_num, dayjob_id])
+            const { part_type, part_num, part_serial_num, flag } = parts[i]
+            
+            // check if flag is insert or update
+            if (flag === "insert")
+                partsToInsertArray.push([part_type, part_num, part_serial_num, dayjob_id])
+            else if (flag === "update")
+                partsToUpdateArray.push([part_type, part_num, part_serial_num, dayjob_id])
         }
 
         try {
-            const sql2: string = `INSERT INTO PARTS (PART_TYPE, PART_NUMBER, PART_SERIAL_NUMBER, DAYJOB_ID) VALUES ?`
-            conn.query(sql2, [partsArray])
+            if (partsToInsertArray.length) {
+                const sql2: string = `INSERT INTO PARTS (PART_TYPE, PART_NUMBER, PART_SERIAL_NUMBER, DAYJOB_ID) VALUES ?`
+                conn.query(sql2, [partsToInsertArray])
+            }
         } catch (err) {
             console.error('erroring when inserting parts: ', err)
         }
-    } catch (err) {
-        console.error('errorong when inserting dayjob: ', err)
     }
 }
 

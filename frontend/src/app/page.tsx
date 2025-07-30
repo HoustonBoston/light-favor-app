@@ -5,42 +5,47 @@ import InputTemplate from "../components/InputTemplate"
 import PartsSelector from "@/components/PartsSelector";
 import HWPart from "@/components/HWPart";
 
-import { Part } from "@/Objects/Part";
+import { Part, Flag } from "@/Objects/Part";
 import { Dayjob } from "@/Objects/Dayjob";
 
-import { save_dayjob_info } from "../../backend-db/db";
 
 function Page ()
 {
-  useEffect(() =>
-  {
-    // fetch("localhost:3000/api/post")
-  }, [])
-
   const [dayjob, setDayjob] = useState<Dayjob>({
     dayjob_num: 123,
     dayjob_serial_num: 123,
     parts: [],
     user_id: "user",
     date: 10,
-    id: 123
-  })  // initial state
+    dayjob_id: null
+  })  // initial state, will be changed when save button is pressed
 
   const [partObjArr, setPartObjArr] = useState<Part[]>([])
+  const [dayjobIdFetchResult, setDayjobIdFetchResult] = useState<number>()
+
+  useEffect(
+    () =>
+    {
+      if (typeof dayjobIdFetchResult == "number") {
+        console.log('dayjobIdFetchResult: ', dayjobIdFetchResult)
+        setDayjob(prev => (
+          { ...prev, dayjob_id: dayjobIdFetchResult, parts: partObjArr }
+        ))
+      }
+    },
+    [dayjobIdFetchResult, partObjArr] // when the fetchResult or part array changes it will be updated in the dayjob object
+  )
 
   const handleAddPart = async () =>
   {
-    const dropdown = document.getElementById('parts-dropdown') as HTMLSelectElement
+    const dropdown = document.getElementById('parts-dropdown') as HTMLSelectElement;
 
     if (dropdown) {
-      const selectedPart = dropdown.value
-      await setPartObjArr(prev => [...prev, { part_type: selectedPart, part_num: null, part_serial_num: null }])
-      await setDayjob(prev => (
-        { ...prev, parts: partObjArr }
-      ))
-      await console.log('parts object arr: ', partObjArr)
+      const selectedPart = dropdown.value;
+      const newPart: Part = { part_type: selectedPart, part_num: null, part_serial_num: null, flag: "insert" as Flag };
+      setPartObjArr([...partObjArr, newPart])
     }
-  }
+  };
 
   const handleSave = async () =>
   {
@@ -53,14 +58,19 @@ function Page ()
         body: JSON.stringify(dayjob)
       });
 
-      const result = await response.json();
+      const json = await response.json()
+      setDayjobIdFetchResult(json.result);  // result returned from api which is returned from save_dayjob_info function
 
-      console.log(">>> result is " + result)
+      setPartObjArr(prev =>
+        prev.map(part => (
+          { ...part, flag: "update" }
+        ))
+      )  // sets each of the item's flag to update.
 
       if (response.ok) {
-        console.log('Dayjob saved successfully:', result);
+        console.log('Dayjob saved successfully:');
       } else {
-        console.error('Failed to save dayjob:', result.error);
+        console.error('Failed to save dayjob:');
       }
     } catch (error) {
       console.error('Network or unexpected error:', error);

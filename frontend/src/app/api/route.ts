@@ -4,10 +4,15 @@ import { save_dayjob_info } from "../../../backend-db/db"
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
-        const result = await save_dayjob_info(body)
-        return NextResponse.json({ success: true, result });  // object returned to the client side
+        const result = await save_dayjob_info(body) // will be receiving the dayjob id
+        
+        if (result != null)
+            return NextResponse.json({ success: true, result });  // object returned to the client side
+        else 
+            return NextResponse.json({ success: false})
     } catch(err: any) {
         console.error('error saving dayjob', err)
+
         return NextResponse.json(
             { success: false, error: err.message || 'Unknown error' },
             { status: 500 }
