@@ -24,7 +24,7 @@ function Page ()
     user_id: "user",
     date: 10,
     id: 123
-  })  // initial state is empty
+  })  // initial state
 
   const [partObjArr, setPartObjArr] = useState<Part[]>([])
 
@@ -34,7 +34,7 @@ function Page ()
 
     if (dropdown) {
       const selectedPart = dropdown.value
-      await setPartObjArr(prev => [...prev, { type: selectedPart, part_num: null, part_serial_num: null }])
+      await setPartObjArr(prev => [...prev, { part_type: selectedPart, part_num: null, part_serial_num: null }])
       await setDayjob(prev => (
         { ...prev, parts: partObjArr }
       ))
@@ -73,8 +73,6 @@ function Page ()
     setDayjob(prev => (
       { ...prev, [name]: value }
     ))
-
-    console.log('changed field: ', name, ' changed value: ', value)
   }
 
   return (

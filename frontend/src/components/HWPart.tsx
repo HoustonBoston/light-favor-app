@@ -30,7 +30,6 @@ export default function HWPart ({
                 ...updatedParts[index],
                 [name]: value
             }
-            console.log('changed field: ', name, ' changed value: ', value)
 
             setDayjob(prev => (
                 { ...prev, parts: updatedParts }
@@ -47,7 +46,7 @@ export default function HWPart ({
         <>
             <div id="box" className="w-[550px] border-solid border-blue-300 border-2 h-[75px] rounded-2xl">
                 <label className="pl-2 font-bold">
-                    {partObj.type}
+                    {partObj.part_type}
                 </label>
                 <div id="flex-cont-part-serial-fields" className="flex justify-center">
                     <div className="" id="part-field">
