@@ -39,14 +39,27 @@ export async function save_dayjob_info(dayjobObj: Dayjob) {
 
             try {
                 const sql2: string = `INSERT INTO PARTS (PART_TYPE, PART_NUMBER, PART_SERIAL_NUMBER, DAYJOB_ID) VALUES ?`
-                conn.query(sql2, [partsArray])
+                if (partsArray.length)  // has 1+ element
+                    await conn.query(sql2, [partsArray])
             } catch (err) {
                 console.error('erroring when inserting parts: ', err)
+                return {
+                    status: 500,
+                    success: false
+                }   
             }
 
-            return dayjob_id
+            return {
+                status: 200,
+                success: true,
+                dayjob_id: dayjob_id  // ideally this is what we get
+            }
         } catch (err) {
             console.error('errorong when inserting dayjob: ', err)
+            return {
+                status: 500,
+                success: false
+            }
         } finally {
             conn.end()
         }
@@ -70,10 +83,19 @@ export async function save_dayjob_info(dayjobObj: Dayjob) {
         try {
             if (partsToInsertArray.length) {
                 const sql2: string = `INSERT INTO PARTS (PART_TYPE, PART_NUMBER, PART_SERIAL_NUMBER, DAYJOB_ID) VALUES ?`
-                conn.query(sql2, [partsToInsertArray])
+                await conn.query(sql2, [partsToInsertArray])
+            }
+
+            return {
+                status: 200,
+                success: true
             }
         } catch (err) {
             console.error('erroring when inserting parts: ', err)
+            return {
+                status: 500,
+                success: false
+            }
         }
     }
 }

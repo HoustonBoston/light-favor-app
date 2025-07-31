@@ -59,19 +59,34 @@ function Page ()
       });
 
       const json = await response.json()
-      setDayjobIdFetchResult(json.result);  // result returned from api which is returned from save_dayjob_info function
+
+      if (json.success) {
+        if (json.dayjob_id !== null)
+          setDayjobIdFetchResult(json.dayjob_id);  // result returned from api which is returned from save_dayjob_info function
+        document.getElementById('save-message')!.textContent = 'Saved!'
+        document.getElementById('save-message')?.classList.remove('hidden')
+
+        setTimeout(() =>
+        {
+          document.getElementById('save-message')?.classList.add('hidden')
+        }, 2000);
+      }
+      else {
+        console.error('error when saving')
+        // set the save-message to fail
+        document.getElementById('save-message')!.textContent = 'Failure'
+
+        setTimeout(() =>
+        {
+          document.getElementById('save-message')?.classList.add('hidden')
+        }, 2000);
+      }
 
       setPartObjArr(prev =>
         prev.map(part => (
           { ...part, flag: "update" }
         ))
       )  // sets each of the item's flag to update.
-
-      if (response.ok) {
-        console.log('Dayjob saved successfully:');
-      } else {
-        console.error('Failed to save dayjob:');
-      }
     } catch (error) {
       console.error('Network or unexpected error:', error);
     }
@@ -101,10 +116,16 @@ function Page ()
           </div>
         </div>
 
-        <div className="flex justify-center mt-10" id="dropdown-flex-contaienr">
+        <div className="flex justify-center mt-10" id="dropdown-flex-container">
           <div id="dropdown" className=""> {/* Centered horizontally on the page */}
             <PartsSelector onAddClick={handleAddPart} />
           </div>
+        </div>
+
+        <div className=" flex justify-center mt-5 h-[20px]">
+          <label className="hidden text-green-600 font-bold text-xl" id="save-message">
+            Saved!
+          </label>
         </div>
 
         <div className="mt-15 flex flex-col gap-y-10" id="parts-list">
