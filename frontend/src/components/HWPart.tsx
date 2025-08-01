@@ -38,8 +38,6 @@ export default function HWPart ({
             return updatedParts
         }
         )
-
-
     }
 
     return (
