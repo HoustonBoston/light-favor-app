@@ -14,6 +14,7 @@
     "@chakra-ui/input": "^2.1.2",
     "@heroui/card": "^2.2.21",
     "@react-oauth/google": "^0.12.2",
+    "jwt-decode": "^4.0.0",
     "mysql2": "^3.14.2",
     "net": "^1.0.2",
     "next": "15.3.5",

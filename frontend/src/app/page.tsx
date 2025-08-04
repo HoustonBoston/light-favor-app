@@ -3,21 +3,21 @@
 import { GoogleLogin } from "@react-oauth/google"
 import { useRouter } from "next/navigation"
 
-import { useAuth } from "@/contexts/AuthContext"
+import { jwtDecode } from "jwt-decode"
+
 
 export default function LoginPage ()
 {
 
 
     const router = useRouter()
-    const { loggedIn, setLoggedIn } = useAuth()
 
     return (
         <div className="h-screen flex justify-center items-center" id="login-info">
             <GoogleLogin onSuccess={credentialResponse =>
             {
-                console.log(credentialResponse)
-                setLoggedIn(true)
+                const decoded = jwtDecode(credentialResponse.credential!)
+                document.cookie = `jwtLogin=${decoded}`
                 router.push('/cabin_readiness')
             }}
                 onError={() =>
