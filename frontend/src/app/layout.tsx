@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "@/components/NavBar/NavBar";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+import UserProvider from "@/context/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,16 +29,16 @@ export default function RootLayout ({
 {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <GoogleOAuthProvider clientId="66052139702-l6jplgkm0kog6m2i58b97qjeq7i97dp9.apps.googleusercontent.com">
-          <NavBar />
+      <GoogleOAuthProvider clientId="66052139702-l6jplgkm0kog6m2i58b97qjeq7i97dp9.apps.googleusercontent.com">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           <main className="pt-14">
+            <NavBar />
             {children}
           </main>
-        </GoogleOAuthProvider>
-      </body>
-    </html>
+        </body>
+      </GoogleOAuthProvider >
+    </html >
   );
 }

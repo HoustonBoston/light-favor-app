@@ -11,6 +11,6 @@ export function middleware (request: NextRequest)
 
 export const config = {
     matcher: [
-        '/((?!$).*)', // Matches everything except the root "/"
+        '/((?!$).*)',  // Matches everything except the root "/"
     ],
 }

@@ -5,7 +5,7 @@ export interface Dayjob
     dayjob_num: number;
     dayjob_serial_num: number;
     parts: Part[];
-    user_id: string;
+    user_id: number;
     date: number;
     dayjob_id?: number | null;
 }

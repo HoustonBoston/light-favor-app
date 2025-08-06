@@ -15,13 +15,22 @@ function Page ()
     dayjob_num: 123,
     dayjob_serial_num: 123,
     parts: [],
-    user_id: "user",
+    user_id: 1,
     date: 10,
     dayjob_id: null
   })  // initial state, will be changed when save button is pressed
 
   const [partObjArr, setPartObjArr] = useState<Part[]>([])
-  const [dayjobIdFetchResult, setDayjobIdFetchResult] = useState<number>()
+  const [dayjobIdFetchResult, setDayjobIdFetchResult] = useState<number>()  // the index id from database
+
+  useEffect(() =>
+  {
+    setDayjob(prev =>
+    {
+      const user_email = document.cookie.split(';').at(2)?.split('=')?.at(1) ?? "";  // get email
+      return { ...prev, user_id: userId };
+    })
+  }, [])  // get the user email after logging in 
 
   useEffect(
     () =>
@@ -33,7 +42,7 @@ function Page ()
         ))
       }
     },
-    [dayjobIdFetchResult, partObjArr] // when the fetchResult or part array changes it will be updated in the dayjob object
+    [dayjobIdFetchResult, partObjArr]  // when the fetchResult or part array changes it will be updated in the dayjob object
   )
 
   const handleAddPart = async () =>
@@ -73,7 +82,9 @@ function Page ()
       }
       else {
         console.error('error when saving')
+
         // set the save-message to fail
+        document.getElementById('save-message')?.classList.remove('hidden')
         document.getElementById('save-message')!.textContent = 'Failure'
 
         setTimeout(() =>

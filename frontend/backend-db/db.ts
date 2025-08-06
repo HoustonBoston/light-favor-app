@@ -1,5 +1,6 @@
 import mysql, { ConnectionOptions } from 'mysql2';
 import { Dayjob } from "../src/Objects/Dayjob"
+import { SourceCode } from 'eslint';
 
 // const access1: PoolOptions = {
 //     user: 'root',
@@ -18,9 +19,10 @@ const access: ConnectionOptions = {
 };
 
 
-export async function save_dayjob_info(dayjobObj: Dayjob) {
+export async function save_dayjob_info (dayjobObj: Dayjob)
+{
     const conn = await mysql.createConnection(access).promise();
-    const { date, dayjob_num, dayjob_serial_num, parts, user_id, dayjob_id, flag } = dayjobObj
+    const { date, dayjob_num, dayjob_serial_num, parts, user_id, dayjob_id } = dayjobObj
 
     if (dayjob_id === null) {  // AKA inserted for the first time ever
         console.log('dayjob_id is null: ', dayjob_id)
@@ -46,7 +48,7 @@ export async function save_dayjob_info(dayjobObj: Dayjob) {
                 return {
                     status: 500,
                     success: false
-                }   
+                }
             }
 
             return {
@@ -55,7 +57,7 @@ export async function save_dayjob_info(dayjobObj: Dayjob) {
                 dayjob_id: dayjob_id  // ideally this is what we get
             }
         } catch (err) {
-            console.error('errorong when inserting dayjob: ', err)
+            console.error('erroring when inserting dayjob: ', err)
             return {
                 status: 500,
                 success: false
@@ -72,7 +74,7 @@ export async function save_dayjob_info(dayjobObj: Dayjob) {
 
         for (let i = 0; i < parts.length; ++i) {
             const { part_type, part_num, part_serial_num, flag } = parts[i]
-            
+
             // check if flag is insert or update
             if (flag === "insert")
                 partsToInsertArray.push([part_type, part_num, part_serial_num, dayjob_id])
@@ -100,10 +102,26 @@ export async function save_dayjob_info(dayjobObj: Dayjob) {
     }
 }
 
-export function delete_part() {
+export async function upsert_user (user_email: string)
+{
+    // single operation to retrieve id even if it doesn't exist
+    const conn = await mysql.createConnection(access).promise()
+    const sql: string = `INSERT INTO DAYJOB_USER (DAYJOB_USER_EMAIL) VALUES (?) 
+    ON DUPLICATE KEY UPDATE 
+        DAYJOB_USER_ID = LAST_INSERT_ID(DAYJOB_USER_ID)`
 
+    try {
+        const [result] = await conn.query<mysql.ResultSetHeader>(sql, [user_email])
+        return { status: 200, success: true, user_id: result.insertId }
+    } catch (error: any) {
+        console.error('some error with query:', error)
+        return { status: 500, success: false }
+    } finally {
+        conn.end()
+    }
 }
 
-export function update_part() {
+export function update_part ()
+{
 
 }
