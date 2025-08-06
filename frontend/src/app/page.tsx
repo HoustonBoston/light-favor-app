@@ -10,7 +10,7 @@ import { useUser } from "@/context/UserContext"
 export default function LoginPage ()
 {
     const router = useRouter()
-    // const [user, setUser] = useUser()
+    const [user, setUser] = useUser()
 
     return (
         <div className="h-screen flex justify-center items-center" id="login-info">
