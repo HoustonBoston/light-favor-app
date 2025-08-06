@@ -11,7 +11,6 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@chakra-ui/input": "^2.1.2",
     "@chakra-ui/react": "^3.24.1",
     "@emotion/react": "^11.14.0",
     "@heroui/card": "^2.2.21",

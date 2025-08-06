@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Input } from "@chakra-ui/input"
+import { Input } from "@chakra-ui/react"
 import lnwImage from "../../app/LnW-Image.png"
 import Image from "next/image"
 
