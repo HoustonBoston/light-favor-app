@@ -7,9 +7,10 @@ import type { ThemeProviderProps } from "next-themes"
 import * as React from "react"
 import { LuMoon, LuSun } from "react-icons/lu"
 
-export interface ColorModeProviderProps extends ThemeProviderProps {}
+export type ColorModeProviderProps = ThemeProviderProps;
 
-export function ColorModeProvider(props: ColorModeProviderProps) {
+export function ColorModeProvider (props: ColorModeProviderProps)
+{
   return (
     <ThemeProvider attribute="class" disableTransitionOnChange {...props} />
   )
@@ -17,16 +18,19 @@ export function ColorModeProvider(props: ColorModeProviderProps) {
 
 export type ColorMode = "light" | "dark"
 
-export interface UseColorModeReturn {
+export interface UseColorModeReturn
+{
   colorMode: ColorMode
   setColorMode: (colorMode: ColorMode) => void
   toggleColorMode: () => void
 }
 
-export function useColorMode(): UseColorModeReturn {
+export function useColorMode (): UseColorModeReturn
+{
   const { resolvedTheme, setTheme, forcedTheme } = useTheme()
   const colorMode = forcedTheme || resolvedTheme
-  const toggleColorMode = () => {
+  const toggleColorMode = () =>
+  {
     setTheme(resolvedTheme === "dark" ? "light" : "dark")
   }
   return {
@@ -36,22 +40,25 @@ export function useColorMode(): UseColorModeReturn {
   }
 }
 
-export function useColorModeValue<T>(light: T, dark: T) {
+export function useColorModeValue<T> (light: T, dark: T)
+{
   const { colorMode } = useColorMode()
   return colorMode === "dark" ? dark : light
 }
 
-export function ColorModeIcon() {
+export function ColorModeIcon ()
+{
   const { colorMode } = useColorMode()
   return colorMode === "dark" ? <LuMoon /> : <LuSun />
 }
 
-interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> {}
+type ColorModeButtonProps = Omit<IconButtonProps, "aria-label">;
 
 export const ColorModeButton = React.forwardRef<
   HTMLButtonElement,
   ColorModeButtonProps
->(function ColorModeButton(props, ref) {
+>(function ColorModeButton (props, ref)
+{
   const { toggleColorMode } = useColorMode()
   return (
     <ClientOnly fallback={<Skeleton boxSize="8" />}>
@@ -76,7 +83,8 @@ export const ColorModeButton = React.forwardRef<
 })
 
 export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
-  function LightMode(props, ref) {
+  function LightMode (props, ref)
+  {
     return (
       <Span
         color="fg"
@@ -92,7 +100,8 @@ export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
 )
 
 export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
-  function DarkMode(props, ref) {
+  function DarkMode (props, ref)
+  {
     return (
       <Span
         color="fg"

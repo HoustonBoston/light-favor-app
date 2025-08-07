@@ -1,8 +1,9 @@
 import Link from "next/link"
-import { Input } from "@chakra-ui/input"
-import lnwImage from "../../app/LnW-Image.png"
+import { Input } from "@chakra-ui/react"
+// import lnwImage from "../../app/LnW-Image.png"
 
-function NavBar() {
+function NavBar ()
+{
     return (
         <header className="shadow shadow-neutral-500 fixed duration-100 w-full h-12 bg-blue-200 z-20">
 

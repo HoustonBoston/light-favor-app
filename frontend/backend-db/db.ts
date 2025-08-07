@@ -1,6 +1,5 @@
 import mysql, { ConnectionOptions } from 'mysql2';
 import { Dayjob } from "../src/Objects/Dayjob"
-import { SourceCode } from 'eslint';
 
 // const access1: PoolOptions = {
 //     user: 'root',
