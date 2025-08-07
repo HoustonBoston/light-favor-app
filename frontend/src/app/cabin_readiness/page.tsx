@@ -116,7 +116,7 @@ function Page ()
     <div id="page" className="flex justify-center">
       <div id="page-content">
 
-        <h1 className="text-center text-2xl">Cabin Readiness</h1>
+        <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
 
         <div className="flex gap-10 pt-10">
           <div className="" id="dj-input">
@@ -130,7 +130,7 @@ function Page ()
         </div>
 
         <div className="flex justify-center mt-10" id="dropdown-flex-container">
-          <div id="dropdown" className=""> {/* Centered horizontally on the page */}
+          <div id="dropdown" className=""> 
             <PartsSelector onAddClick={handleAddPart} />
           </div>
         </div>

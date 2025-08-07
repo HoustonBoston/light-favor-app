@@ -45,8 +45,6 @@ export default function LoginPage ()
                             ))
                             .then(() =>
                             {
-                                console.log('user email login page:', user!.dayjob_user_email)
-                                console.log('user id login page:', user!.dayjob_user_id)
                                 router.push('/cabin_readiness')
                             })
                     }

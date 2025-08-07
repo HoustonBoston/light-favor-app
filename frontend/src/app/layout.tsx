@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar/NavBar";
 
 // providers
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { Provider } from "@/components/ui/provider";
+// import { Provider } from "@/components/ui/provider";
 import UserProvider from "@/context/UserContext";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Dayjob",
@@ -31,18 +31,17 @@ export default function RootLayout ({
 {
   return (
     <html lang="en">
-      <body>
-        <Provider>
-          <GoogleOAuthProvider clientId="66052139702-l6jplgkm0kog6m2i58b97qjeq7i97dp9.apps.googleusercontent.com">
-            <UserProvider>
-              <main>
-                <NavBar />
-                <div className="h-20" />  {/* adds spacer */}
-                {children}
-              </main>
-            </UserProvider>
-          </GoogleOAuthProvider >
-        </Provider>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <GoogleOAuthProvider clientId="66052139702-l6jplgkm0kog6m2i58b97qjeq7i97dp9.apps.googleusercontent.com">
+          <UserProvider>
+            <NavBar />
+            <main className="pt-14">
+              {children}
+            </main>
+          </UserProvider>
+        </GoogleOAuthProvider >
       </body>
     </html>
   );

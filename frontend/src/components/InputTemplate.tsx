@@ -1,4 +1,4 @@
-import { Field, Input } from "@chakra-ui/react"
+import { Field, Input } from "@chakra-ui/input"
 import React from "react"
 
 export default function InputTemplate ({ id, onChange, name, label }:
@@ -10,10 +10,6 @@ export default function InputTemplate ({ id, onChange, name, label }:
     })
 {
     return (
-        <Field.Root required>
-            <Field.Label>
-                {label}
-            </Field.Label>
             <Input
                 display="inherit"
                 onChange={onChange}
@@ -24,7 +20,5 @@ export default function InputTemplate ({ id, onChange, name, label }:
                 id={id}
                 name={name}
             />
-            <Field.ErrorText>This field is required</Field.ErrorText>
-        </Field.Root>
     )
 }
