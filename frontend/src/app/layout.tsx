@@ -37,7 +37,7 @@ export default function RootLayout ({
             <UserProvider>
               <main>
                 <NavBar />
-                <div className="h-14" />  {/* adds spacer */}
+                <div className="h-20" />  {/* adds spacer */}
                 {children}
               </main>
             </UserProvider>

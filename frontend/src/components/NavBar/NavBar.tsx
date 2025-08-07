@@ -12,19 +12,19 @@ function NavBar ()
                     <Image alt="LNW Logo" src={lnwImage.src} width={110} height={30} className="pl-2"></Image>
                 </div>
                 <div className="absolute left-[50%] -translate-x-1/2"> {/* centers the search bar */}
-                    <Input
-                        className="placeholder:text-center"
+                    <input
+                        className="focus:outline-none w-2x bg-amber-50 rounded-2xl placeholder:text-center placeholder:cursor-auto
+                        text-center placeholder:text-black"
                         placeholder="Search DJ ID"
                         width={200}
-                        variant="subtle"
                     />
                 </div>
-                <div className="flex gap-6 text-black">
+                <div className="flex gap-4 text-black">
                     <Link href="/">Home</Link>
                     <Link href="/cabin_readiness">Cabin Readiness</Link>
-                    <Link href="/login" className="pr-2">Test Area</Link>
-                    <Link href="/login" className="pr-2">Hospital</Link>
-                    <Link href="/login" className="pr-2">Reports</Link>
+                    <Link href="/login">Test Area</Link>
+                    <Link href="/login">Hospital</Link>
+                    <Link href="/login" className="pr-4">Reports</Link>
                 </div>
             </div>
         </header>

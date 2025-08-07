@@ -11,7 +11,7 @@ function NavBar ()
                 <div className="ml-[50%] -translate-x-1/2">
 
                     <Input
-                        className="focus:outline-none w-2x bg-amber-50 rounded-2xl placeholder:text-center placeholder:cursor-auto
+                        className="focus:outline-hidden w-2x bg-amber-50 rounded-2xl placeholder:text-center placeholder:cursor-auto
                         text-center placeholder:text-black"
                         placeholder="Search DJ ID"
                     />

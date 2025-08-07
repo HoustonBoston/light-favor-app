@@ -116,16 +116,16 @@ function Page ()
     <div id="page" className="flex justify-center">
       <div id="page-content">
 
-        <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
+        <h1 className="text-center text-2xl">Cabin Readiness</h1>
 
-        <div className="flex gap-10">
-          <div id="dj-input">
-            <label className="mr-2 font-bold">DJ No</label>
-            <InputTemplate name="dayjob_num" id="dj-num" onChange={onDayjobInfoChange} />
+        <div className="flex gap-10 pt-10">
+          <div className="" id="dj-input">
+            <label className="font-bold mr-2">DJ No</label>
+            <InputTemplate label="DJ No" name="dayjob_num" id="dj-num" onChange={onDayjobInfoChange} />
           </div>
           <div className="" id="serial-input">
-            <label className="mr-2 font-bold">Serial No</label>
-            <InputTemplate name="dayjob_serial_num" id="dj-serial-num" onChange={onDayjobInfoChange} />
+            <label htmlFor="dayjob_serial_num" className="mr-2 font-bold">Serial No</label>
+            <InputTemplate label="Serial No" name="dayjob_serial_num" id="dj-serial-num" onChange={onDayjobInfoChange} />
           </div>
         </div>
 
