@@ -111,7 +111,7 @@ export async function upsert_user (user_email: string)
 
     try {
         const [result] = await conn.query<mysql.ResultSetHeader>(sql, [user_email])
-        return { status: 200, success: true, user_id: result.insertId }
+        return { status: 200, success: true, dayjob_user_id: result.insertId }
     } catch (error: any) {
         console.error('some error with query:', error)
         return { status: 500, success: false }

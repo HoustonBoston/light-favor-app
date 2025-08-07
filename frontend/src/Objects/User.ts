@@ -2,8 +2,8 @@ import { Dayjob } from "./Dayjob";
 
 export interface User
 {
-    user_id: number;
-    user_email: string;
+    dayjob_user_id: number;
+    dayjob_user_email: string;
     dayjobArr?: Dayjob[]
 }
 

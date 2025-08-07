@@ -13,7 +13,7 @@ export default function InputTemplate ({ id, onChange, name }:
             onChange={onChange}
             required
             placeholder="Enter Text"
-            // className="text-center rounded-2xl border placeholder:text-center"
+            className="placeholder:text-center"
             id={id}
             name={name}
         />

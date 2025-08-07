@@ -13,10 +13,10 @@ function NavBar ()
                 </div>
                 <div className="absolute left-[50%] -translate-x-1/2"> {/* centers the search bar */}
                     <Input
-                        className="w-2x rounded-2xl placeholder:text-center placeholder:cursor-auto
-                        text-center placeholder:text-black"
+                        className="placeholder:text-center"
                         placeholder="Search DJ ID"
                         width={200}
+                        variant="subtle"
                     />
                 </div>
                 <div className="flex gap-6 text-black">

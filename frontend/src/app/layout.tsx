@@ -35,8 +35,9 @@ export default function RootLayout ({
         <Provider>
           <GoogleOAuthProvider clientId="66052139702-l6jplgkm0kog6m2i58b97qjeq7i97dp9.apps.googleusercontent.com">
             <UserProvider>
-              <main className="pt-14">
+              <main>
                 <NavBar />
+                <div className="h-14" />  {/* adds spacer */}
                 {children}
               </main>
             </UserProvider>

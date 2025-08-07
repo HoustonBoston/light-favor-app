@@ -21,9 +21,9 @@ export default function LoginPage ()
                     console.log('decoded', decoded)
                     document.cookie = `jwtLogin=${String(decoded.email)}`  // ignore underline because email does exist. Will be used for middleware.js
 
-                    fetch('http://localhost:3000/get_user_id',
+                    fetch('http://localhost:3000/api/get_user_id',
                         {
-                            method: 'GET',
+                            method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
@@ -32,17 +32,23 @@ export default function LoginPage ()
                     ).then((response) =>
                     {
                         // set the user object state.
-                        response.json().then((result) => setUser(prev =>
-                        {
-                            return {
-                                ...prev, user_email: decoded.email,
-                                user_id: result.user_id,
-                                dayjobArr: prev?.dayjobArr
+                        response.json()
+                            .then((result) => setUser(prev =>
+                            {
+                                return {
+                                    ...prev,
+                                    dayjob_user_email: decoded.email,
+                                    dayjob_user_id: result.dayjob_user_id,
+                                    dayjobArr: prev?.dayjobArr
+                                }
                             }
-                        }
-                        ))
-
-                        router.push('/cabin_readiness')
+                            ))
+                            .then(() =>
+                            {
+                                console.log('user email login page:', user!.dayjob_user_email)
+                                console.log('user id login page:', user!.dayjob_user_id)
+                                router.push('/cabin_readiness')
+                            })
                     }
                     )
                 }

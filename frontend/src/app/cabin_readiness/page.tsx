@@ -8,9 +8,13 @@ import HWPart from "@/components/HWPart";
 import { Part, Flag } from "@/Objects/Part";
 import { Dayjob } from "@/Objects/Dayjob";
 
+import { useUser } from "@/context/UserContext";
+
 
 function Page ()
 {
+  const [user, setUser] = useUser()
+
   const [dayjob, setDayjob] = useState<Dayjob>({
     dayjob_num: 123,
     dayjob_serial_num: 123,
@@ -25,12 +29,9 @@ function Page ()
 
   useEffect(() =>
   {
-    setDayjob(prev =>
-    {
-      const user_email = document.cookie.split(';').at(2)?.split('=')?.at(1) ?? "";  // get email
-      return { ...prev, user_id: userId };
-    })
-  }, [])  // get the user email after logging in 
+    setDayjob(prev => ({ ...prev, user_id: user!.dayjob_user_id }))
+    console.log('user id in cabin readiness page', dayjob.user_id)
+  }, [user])  // get the user email after logging in 
 
   useEffect(
     () =>
@@ -115,7 +116,8 @@ function Page ()
     <div id="page" className="flex justify-center">
       <div id="page-content">
 
-        <h1 className="text-center mb-10 text-2xl font-bold ">Cabin Readiness</h1>
+        <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
+
         <div className="flex gap-10">
           <div id="dj-input">
             <label className="mr-2 font-bold">DJ No</label>
