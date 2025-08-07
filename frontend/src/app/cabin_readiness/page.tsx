@@ -23,14 +23,14 @@ function Page ()
   const [partObjArr, setPartObjArr] = useState<Part[]>([])
   const [dayjobIdFetchResult, setDayjobIdFetchResult] = useState<number>()  // the index id from database
 
-  // useEffect(() =>
-  // {
-  //   setDayjob(prev =>
-  //   {
-  //     const user_email = document.cookie.split(';').at(2)?.split('=')?.at(1) ?? "";  // get email
-  //     return { ...prev, user_id: userId };
-  //   })
-  // }, [])  // get the user email after logging in 
+  useEffect(() =>
+  {
+    setDayjob(prev =>
+    {
+      const user_email = document.cookie.split(';').at(2)?.split('=')?.at(1) ?? "";  // get email
+      return { ...prev, user_id: userId };
+    })
+  }, [])  // get the user email after logging in 
 
   useEffect(
     () =>
