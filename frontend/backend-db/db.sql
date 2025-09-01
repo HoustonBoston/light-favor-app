@@ -6,7 +6,7 @@
 
 USE DAYJOB;
 
- DROP TABLE PARTS_TYPE_MASTER;
+DROP TABLE DAYJOB_USER;
  DROP TABLE PARTS;
  DROP TABLE DAYJOB;
 
@@ -20,23 +20,29 @@ DELETE FROM DAYJOB WHERE DAYJOB_ID >= 0;
 -- ALTER TABLE PARTS 
 -- MODIFY COLUMN PART_SERIAL_NUMBER int; 
 
+# USER AND DAYJOB ARE ONE-MANY
+CREATE TABLE DAYJOB_USER (
+	user_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,	
+	user_email varchar(30)
+);
+
 # DAYJOB AND PARTS ARE ONE-MANY
 CREATE TABLE DAYJOB (
-    DAYJOB_ID int NOT NULL AUTO_INCREMENT,
-    DAYJOB_DATE BIGINT,
-    DAYJOB_SERIAL_NUMBER int,
-    DAYJOB_NUMBER int,
-    USER_ID varchar(10),
+    dayjob_id int NOT NULL AUTO_INCREMENT,
+    dayjob_date BIGINT,
+    dayjob_serial_number int,
+    dayjob_number int,
+    dayjob_user_id int,
     PRIMARY KEY (DAYJOB_ID)
 );
 
 # PARTS AND PARTS_TYPE_MASTER ARE ONE-ONE
 CREATE TABLE PARTS (
-    PART_ID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    PART_TYPE varchar(10),
-    PART_NUMBER int,
-    PART_SERIAL_NUMBER int,
-    DAYJOB_ID int,
+    part_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    part_type varchar(10),
+    part_number int,
+    part_serial_number int,
+    dayjob_id int,
     FOREIGN KEY (DAYJOB_ID) REFERENCES DAYJOB(DAYJOB_ID)
 );
 

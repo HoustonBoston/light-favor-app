@@ -1,4 +1,4 @@
-export type Flag = "insert" | "update" 
+export type Flag = "insert" | "update" | "none"
 
 export interface Part
 {

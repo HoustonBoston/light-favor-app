@@ -1,11 +1,8 @@
-import { Part } from "./Part";
-
 export interface Dayjob
 {
-    dayjob_num: number;
-    dayjob_serial_num: number;
-    parts: Part[];
+    dayjob_number: number;
+    dayjob_serial_number: number;
     user_id: string;
-    date: number;
+    date?: number;
     dayjob_id?: number | null;
 }
