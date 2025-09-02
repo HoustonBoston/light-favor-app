@@ -1,10 +1,7 @@
-import { Dayjob } from "./Dayjob";
-
 export interface User
 {
-    dayjob_user_id: number;
-    dayjob_user_email: string;
-    dayjobArr?: Dayjob[]
+    user_id?: number;
+    user_email: string;
 }
 
 export type UserState = User | null
