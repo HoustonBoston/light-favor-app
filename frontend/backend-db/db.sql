@@ -42,7 +42,7 @@ CREATE TABLE DAYJOB (
     dayjob_number int,
     user_id int,
     PRIMARY KEY (dayjob_id),
-    FOREIGN KEY (dayjob_user_id) REFERENCES DAYJOB_USER(dayjob_user_id)
+    FOREIGN KEY (user_id) REFERENCES DAYJOB_USER(user_id)
 );
 
 # PARTS AND PARTS_TYPE_MASTER ARE ONE-ONE

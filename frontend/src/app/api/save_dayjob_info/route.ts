@@ -6,7 +6,7 @@ export async function POST (request: NextRequest)
     try {
         const body = await request.json()
         const result = await save_dayjob_info(body)  
-        // should receive json object with status, success, dayjob_id
+        // should send json object with status, success, dayjob_id
         return NextResponse.json(result);  // object returned to the client side
     } catch (err) {
         console.error('error saving dayjob', err)

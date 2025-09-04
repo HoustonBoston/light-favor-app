@@ -21,7 +21,7 @@ export default function LoginPage ()
                     console.log('decoded', decoded)
                     document.cookie = `jwtLogin=${String(decoded.email)}`  // ignore underline because email does exist. Will be used for middleware.js
 
-                    fetch('http://localhost:3000/api/get_user_id',
+                    fetch('http://localhost:3000/api/get_user_id',  // TODO: define an api route
                         {
                             method: 'POST',
                             headers: {
@@ -37,9 +37,8 @@ export default function LoginPage ()
                             {
                                 return {
                                     ...prev,
-                                    dayjob_user_email: decoded.email,
-                                    dayjob_user_id: result.dayjob_user_id,
-                                    dayjobArr: prev?.dayjobArr
+                                    user_email: decoded.email,
+                                    user_id: result.user_id,
                                 }
                             }
                             ))

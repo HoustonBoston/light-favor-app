@@ -1,4 +1,4 @@
-import { Field, Input } from "@chakra-ui/input"
+import { Input } from "@chakra-ui/input"
 import React from "react"
 
 export default function InputTemplate ({ id, onChange, name, label }:

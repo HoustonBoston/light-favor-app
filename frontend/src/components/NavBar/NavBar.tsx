@@ -3,6 +3,8 @@ import { Input } from "@chakra-ui/input"
 import lnwImage from "../../app/LnW-Image.png"
 import Image from "next/image"
 
+
+// TODO: add search functionality   
 function NavBar ()
 {
     return (

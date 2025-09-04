@@ -5,10 +5,9 @@ const access: ConnectionOptions = {
     database: 'DAYJOB',
     host: 'localhost',
     port: 3306,
-    password: '4779'
 };
 
-export async function get_dayjob_info (user_id: number) {
+export async function get_dayjobs (user_id: number) {
     const conn = await mysql.createConnection(access).promise();
     const sql: string = `SELECT * FROM DAYJOB WHERE USER_ID = ?`;
     try {

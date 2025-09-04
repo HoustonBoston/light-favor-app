@@ -1,20 +1,11 @@
 import mysql, { ConnectionOptions } from 'mysql2';
 import { Dayjob } from "../../src/Objects/Dayjob"
 
-// const access1: PoolOptions = {
-//     user: 'root',
-//     database: 'DAYJOB',
-//     host: 'localhost',
-//     port: 3306,
-//     password: '4779'
-// };
-
 const access: ConnectionOptions = {
     user: 'root',
     database: 'DAYJOB',
     host: 'localhost',
     port: 3306,
-    password: '4779'
 };
 
 

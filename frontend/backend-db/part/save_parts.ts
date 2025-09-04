@@ -6,7 +6,6 @@ const access: ConnectionOptions = {
     database: 'DAYJOB',
     host: 'localhost',
     port: 3306,
-    password: '4779'
 };
 
 export async function save_parts(parts: Part[]) {
