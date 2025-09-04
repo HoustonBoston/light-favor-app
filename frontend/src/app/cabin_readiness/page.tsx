@@ -52,7 +52,7 @@ function Page ()
 
     if (dropdown) {
       const selectedPart = dropdown.value;
-      const newPart: Part = { part_type: selectedPart, part_num: null, part_serial_num: null, flag: "insert" as Flag };
+      const newPart: Part = { part_type: selectedPart, part_number: null, part_serial_number: null, flag: "insert" as Flag };
       setPartObjArr([...partObjArr, newPart])
     }
   };

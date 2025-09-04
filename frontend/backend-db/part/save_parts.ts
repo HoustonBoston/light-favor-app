@@ -9,26 +9,36 @@ const access: ConnectionOptions = {
     password: '4779'
 };
 
-export async function save_parts(part: Part) {
+export async function save_parts(parts: Part[]) {
     const conn = await mysql.createConnection(access).promise();
-    const { part_number, part_serial_number, dayjob_id } = part;
 
-    try {
-        const sql: string = `INSERT INTO PARTS (PART_TYPE, PART_NUMBER, PART_SERIAL_NUMBER, DAYJOB_ID)
+    const toInsert = [];
+
+    for (const part of parts) {
+            const { part_type, part_number, part_serial_number, dayjob_id, flag } = part;
+            if (flag === "insert") {
+                toInsert.push({ part_type, part_number, part_serial_number, dayjob_id });
+            }
+        }
+
+    if (toInsert.length) {
+        try {
+        const sql: string = `INSERT INTO PARTS (part_type, part_number, part_serial_number, dayjob_id)
         VALUES (?, ?, ?, ?)`;
-        await conn.query(sql, [part_type, part_number, part_serial_number, dayjob_id]);
+            await conn.query(sql, [[toInsert]]);
 
         return {
             status: 200,
             success: true
         };
-    } catch (err) {
-        console.error('erroring when inserting parts: ', err);
-        return {
-            status: 500,
-            success: false
-        };
-    } finally {
-        conn.end();
+        } catch (err) {
+            console.error('erroring when inserting parts: ', err);
+            return {
+                status: 500,
+                success: false
+            };
+        } finally {
+            conn.end();
+        }
     }
 }

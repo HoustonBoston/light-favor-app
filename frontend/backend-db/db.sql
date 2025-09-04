@@ -2,10 +2,10 @@ CREATE DATABASE DAYJOB;
 
 USE DAYJOB;
 
- DROP TABLE PARTS_TYPE_MASTER;
- DROP TABLE PARTS;
- DROP TABLE DAYJOB;
- DROP TABLE DAYJOB_USER;
+DROP TABLE PARTS_TYPE_MASTER;
+DROP TABLE PARTS;
+DROP TABLE DAYJOB;
+DROP TABLE DAYJOB_USER;
 
 
 SELECT * FROM DAYJOB;
@@ -30,8 +30,8 @@ SELECT * FROM DAYJOB_USER;
 
 # USER AND DAYJOB ARE ONE TO MANY
 CREATE TABLE DAYJOB_USER (
-	DAYJOB_USER_ID int AUTO_INCREMENT PRIMARY KEY NOT NULL,
-	DAYJOB_USER_EMAIL varchar(50) UNIQUE  # this is what will be searched by
+	user_id int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+	user_email varchar(50) UNIQUE  # this is what will be searched by
 );
 
 # DAYJOB AND PARTS ARE ONE-MANY
@@ -40,7 +40,7 @@ CREATE TABLE DAYJOB (
     dayjob_date BIGINT,
     dayjob_serial_number int,
     dayjob_number int,
-    dayjob_user_id int,
+    user_id int,
     PRIMARY KEY (dayjob_id),
     FOREIGN KEY (dayjob_user_id) REFERENCES DAYJOB_USER(dayjob_user_id)
 );
