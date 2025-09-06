@@ -27,7 +27,7 @@ export default function LoginPage ()
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify(decoded.email)
+                            body: JSON.stringify({ user_email: decoded.email })
                         }
                     ).then((response) =>
                     {

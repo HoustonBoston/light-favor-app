@@ -8,7 +8,7 @@ const access: ConnectionOptions = {
     port: 3306,
 };
 
-
+// TODO: turn this into update function
 export async function save_dayjob_info (dayjobObj: Dayjob)
 {
     const conn = await mysql.createConnection(access).promise();
@@ -43,7 +43,28 @@ export async function save_dayjob_info (dayjobObj: Dayjob)
     }
 }
 
-export function update_part ()
-{
+// returns dayjob id from user id
+export async function insert_dayjob_once (user_id: number) {
+    const conn = await mysql.createConnection(access).promise();
+    const sql = `INSERT INTO DAYJOB (USER_ID)
+                VALUES (?)`;
+    
+    try {
+        const [execResult] = await conn.query<mysql.ResultSetHeader>(sql, [user_id]);
+        const dayjob_id = execResult.insertId;
 
+        return {
+            status: 200,
+            success: true,
+            dayjob_id: dayjob_id
+        };
+    } catch (err) {
+        console.error('erroring when inserting dayjob: ', err);
+        return {
+            status: 500,
+            success: false
+        };
+    } finally {
+        conn.end();
+    }
 }

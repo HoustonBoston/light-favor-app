@@ -17,6 +17,7 @@ function Page ()
   // fetch the dayjob list from backend based on the user id
   useEffect(() =>
   {
+    console.log('fetching dayjobs for user id:', user!.user_id)
     const fetchDayjobs = async () =>
     {
       const response = await fetch(`http://localhost:3000/api/get_dayjobs`, 
@@ -25,7 +26,7 @@ function Page ()
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(user!.user_id)  // user id from context
+          body: JSON.stringify({ user_id: user!.user_id })  // user id from context
         }
       );
       const data = await response.json();
@@ -37,7 +38,32 @@ function Page ()
 
   const handleAddDayjob = async () =>
   {
-    
+    // add a new dayjob to the db
+    // then retrieve the id and push to the dayjob array
+    console.log('trying to add new dayjob to DB');
+
+    const result = await fetch('http://localhost:3000/api/insert_dayjob_once',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' 
+      },
+      body: JSON.stringify({ user_id: user!.user_id })  // user id from context
+    });
+
+    const data = await result.json();
+    if (data.success)
+    {  
+      const newDayjob: Dayjob = {
+        dayjob_id: data.dayjob_id,  // returned from backend
+        user_id: user?.user_id ?? 0,  // fallback to 0 if undefined
+        dayjob_number: data.dayjob_number,
+        dayjob_serial_number: data.dayjob_serial_number,
+      };
+      setDayjobArr(prev => [...prev, newDayjob]);
+    } else {
+      console.error('Failed to create new dayjob');
+    }
   }
 
   // const handleSave = async () =>
@@ -127,7 +153,6 @@ function Page ()
             }
             )
           }
-
 
         </div>
 
