@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { save_dayjob_info } from "../../../../backend-db/dayjob/save_dayjob_info"
+import { update_dayjob_info } from "../../../../backend-db/dayjob/save_dayjob_info"
 
 export async function POST (request: NextRequest)
 {
     try {
         const body = await request.json()
-        const result = await save_dayjob_info(body)  
+        const result = await update_dayjob_info(body)  
         // should send json object with status, success, dayjob_id
         return NextResponse.json(result);  // object returned to the client side
     } catch (err) {
-        console.error('error saving dayjob', err)
+        console.error('error updating dayjob', err)
 
         return NextResponse.json(
             { success: false, error: err || 'Unknown error' },

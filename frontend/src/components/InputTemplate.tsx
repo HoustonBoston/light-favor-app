@@ -1,12 +1,14 @@
 import { Input } from "@chakra-ui/input"
 import React from "react"
 
-export default function InputTemplate ({ id, onChange, name, label }:
+export default function InputTemplate ({ id, onChange, name, value, readOnly, placeholder }:
     {
         id?: string,
-        onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
+        onChange?: (e: React.ChangeEvent<HTMLInputElement>, index?: number) => void,
         name?: string,
-        label: string
+        value?: string | number,
+        readOnly?: boolean,
+        placeholder?: string
     })
 {
     return (
@@ -14,11 +16,14 @@ export default function InputTemplate ({ id, onChange, name, label }:
                 display="inherit"
                 onChange={onChange}
                 required
-                placeholder="Enter Text"
-                className="placeholder:text-center"
+                placeholder={placeholder}
+                className="placeholder:text-center placeholder:text-black text-center"
                 variant="subtle"
                 id={id}
                 name={name}
+                onClick={(e) => e.stopPropagation()}
+                value={value}
+                readOnly={readOnly}
             />
     )
 }

@@ -6,6 +6,9 @@ import { Dayjob } from "@/Objects/Dayjob";
 
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
+import DayjobField from "@/components/DayjobField";
+
+import {debounce} from "lodash";
 
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
 function Page ()
@@ -30,7 +33,9 @@ function Page ()
         }
       );
       const data = await response.json();
-      setDayjobArr(data.dayjob_arr);
+      if (data.success && Array.isArray(data.dayjob_arr)) {
+        setDayjobArr(data.dayjob_arr);
+      }
     };
 
     fetchDayjobs();
@@ -66,59 +71,44 @@ function Page ()
     }
   }
 
-  // const handleSave = async () =>
-  // {
-  //   try {
-  //     const response = await fetch('http://localhost:3000/api', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify(dayjob)
-  //     });
-
-  //     const json = await response.json()
-
-  //     if (json.success) {
-  //       if (json.dayjob_id !== null)
-  //         setDayjobIdFetchResult(json.dayjob_id);  // result returned from api which is returned from save_dayjob_info function
-  //       document.getElementById('save-message')!.textContent = 'Saved!'
-  //       document.getElementById('save-message')?.classList.remove('hidden')
-
-  //       setTimeout(() =>
-  //       {
-  //         document.getElementById('save-message')?.classList.add('hidden')
-  //       }, 2000);
-  //     }
-  //     else {
-  //       console.error('error when saving')
-
-  //       // set the save-message to fail
-  //       document.getElementById('save-message')?.classList.remove('hidden')
-  //       document.getElementById('save-message')!.textContent = 'Failure'
-
-  //       setTimeout(() =>
-  //       {
-  //         document.getElementById('save-message')?.classList.add('hidden')
-  //       }, 2000);
-  //     }
-
-  //     setPartObjArr(prev =>
-  //       prev.map(part => (
-  //         { ...part, flag: "none" }
-  //       ))
-  //     )  // sets each of the item's flag to none.
-  //   } catch (error) {
-  //     console.error('Network or unexpected error:', error);
-  //   }
-  // };
-
-  const onDayjobInfoChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const onDayjobInfoChange = (e: React.ChangeEvent<HTMLInputElement>, index?: number) =>
   {
+    if (index === undefined) return;  // safety check
+
     const { name, value } = e.target
-    setDayjob(prev => (
-      { ...prev, [name]: value }
-    ))
+    setDayjobArr(prev => {
+      const updated = prev.map((dj, idx) =>
+        idx === index ? { ...dj, [name]: value } : dj
+      );
+
+      // call the debounced save with the updated dayjob
+      console.log("updated dayjob:", updated[index]);
+      debouncedSave(updated[index]);
+
+      return updated;
+  });
+
+
+    // debounce the save operation to avoid excessive calls
+    const debouncedSave = debounce(
+      async (updatedDayjob: Dayjob) => {
+        try {
+          console.log("trying to update dayjob")
+          const response = await fetch('http://localhost:3000/api/update_dayjob_info', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDayjob)  // send only the updated dayjob
+          });
+        } catch (error) {
+          console.error('Error updating dayjob info:', error);
+        }
+      }, 2000
+    )
+
+    console.log("debouncing the save operation")
+    debouncedSave(dayjobArr[index])
   }
 
   return (
@@ -127,7 +117,7 @@ function Page ()
 
         <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
 
-        <div>
+        <div className="flex justify-center">
           <button className="mt-5 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
             onClick={handleAddDayjob}
           >
@@ -142,12 +132,7 @@ function Page ()
             {
               return (
                 <div className="flex items-center" key={idx}>
-                  {/* clickable Dayjob input */}
-                  <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={() => router.push(`/cabin_readiness/${Dj.dayjob_id}`)}  // navigate to the dayjob page
-                  >
-                    {`DJ No: ${Dj.dayjob_number}, Serial No: ${Dj.dayjob_serial_number}`}
-                  </button>
+                  <DayjobField Dj={Dj} onDayjobInfoChange={(e) => onDayjobInfoChange(e, idx)} />
                 </div>
               )
             }

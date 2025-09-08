@@ -7,37 +7,17 @@ import { Part } from "@/Objects/Part"
 import { Dayjob } from "@/Objects/Dayjob"
 
 export default function HWPart ({
-    partObj, setParts, index, setDayjob
+    partObj, setParts, index, onChange
 }: {
     partObj: Part,
     setParts: React.Dispatch<React.SetStateAction<Part[]>>,
     index: number,
-    setDayjob: React.Dispatch<React.SetStateAction<Dayjob>>
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 })
 {
     const handleDelete = () =>
     {
         setParts(prev => prev.filter((_, i) => i !== index))
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    {
-        const { name, value } = e.target
-        setParts(prev =>
-        {
-            const updatedParts = [...prev]
-            updatedParts[index] = {
-                ...updatedParts[index],
-                [name]: value
-            }
-
-            setDayjob(prev => (
-                { ...prev, parts: updatedParts }
-            ))
-
-            return updatedParts
-        }
-        )
     }
 
     return (
@@ -51,13 +31,13 @@ export default function HWPart ({
                         <label className="mr-2 font-bold">
                             Part No
                         </label>
-                        <InputTemplate onChange={handleChange} name="part_num" />
+                        <InputTemplate onChange={onChange} name="part_number" />
                     </div>
                     <div className="ml-2" id="serial-field">
                         <label className="mr-2 font-bold">
                             Serial No
                         </label>
-                        <InputTemplate onChange={handleChange} name="part_serial_num" />
+                        <InputTemplate onChange={onChange} name="part_serial_number" />
                     </div>
                 </div>
             </div>

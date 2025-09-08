@@ -5,158 +5,149 @@ import InputTemplate from "../../../components/InputTemplate"
 import PartsSelector from "@/components/PartsSelector";
 import HWPart from "@/components/HWPart";
 
+import {debounce} from "lodash";
+
 import { Part, Flag } from "@/Objects/Part";
-import { Dayjob } from "@/Objects/Dayjob";
 
 import { useUser } from "@/context/UserContext";
 
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
-function Page ()
-{
-const [user, setUser] = useUser()
-const [partObjArr, setPartObjArr] = useState<Part[]>([])
-
-// useEffect(() =>
-// {
-//     setDayjob(prev => ({ ...prev, user_id: user!.user_id }))
-//     console.log('user id in cabin readiness page', dayjob.user_id)
-// }, [user])  // get the user email after logging in 
-
-// useEffect(
-//     () =>
-//     {
-//     if (typeof dayjobIdFetchResult == "number") {
-//         console.log('dayjobIdFetchResult: ', dayjobIdFetchResult)
-//         setDayjob(prev => (
-//         { ...prev, dayjob_id: dayjobIdFetchResult, parts: partObjArr }
-//         ))
-//     }
-//     },
-//     [dayjobIdFetchResult, partObjArr]  // when the fetchResult or part array changes it will be updated in the dayjob object
-// )
+function Page ({
+    params,
+}: { params: Promise<{ dayjob_id: string }> }) {
+    const { dayjob_id } = React.use(params)
+    const [user, setUser] = useUser()
+    const [partObjArr, setPartObjArr] = useState<Part[]>([])
+    const [dayjobFields, setDayjobFields] = useState<{ dayjob_num: number | null, dayjob_serial_num: number | null, dayjob_id: number | null }>({
+        dayjob_num: null,
+        dayjob_serial_num: null,
+        dayjob_id: dayjob_id ? parseInt(dayjob_id) : null
+})
 
 const handleAddPart = async () =>
 {
     const dropdown = document.getElementById('parts-dropdown') as HTMLSelectElement;
 
     if (dropdown) {
-    const selectedPart = dropdown.value;
-    const newPart: Part = { part_type: selectedPart, part_number: null, part_serial_number: null, flag: "insert" as Flag };
-    setPartObjArr([...partObjArr, newPart])
+        const selectedPart = dropdown.value;
+        const newPart: Part = { part_type: selectedPart, part_number: null, part_serial_number: null, flag: "insert" as Flag };
+        setPartObjArr([...partObjArr, newPart])
     }
 };
 
-const handleSave = async () =>
-{
-    try {
-    const response = await fetch('http://localhost:3000/api', {
+const getParts = async (dayjob_id: number) => {
+    // Fetch parts for the given dayjob_id
+    const response = await fetch('http://localhost:3000/api/get_parts', {
         method: 'POST',
         headers: {
-        'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dayjob)
-    });
+        body: JSON.stringify({ dayjob_id }),
+    })
 
-    const json = await response.json()
+    const result = await response.json();
 
-    if (json.success) {
-        if (json.dayjob_id !== null)
-        setDayjobIdFetchResult(json.dayjob_id);  // result returned from api which is returned from save_dayjob_info function
-        document.getElementById('save-message')!.textContent = 'Saved!'
-        document.getElementById('save-message')?.classList.remove('hidden')
-
-        setTimeout(() =>
-        {
-        document.getElementById('save-message')?.classList.add('hidden')
-        }, 2000);
+    if (result.success) {
+        setPartObjArr(result.parts_arr);
     }
-    else {
-        console.error('error when saving')
+}
 
-        // set the save-message to fail
-        document.getElementById('save-message')?.classList.remove('hidden')
-        document.getElementById('save-message')!.textContent = 'Failure'
+const debouncedSave = debounce(async (part: Part) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/update_part', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ part }),
+        });
 
-        setTimeout(() =>
-        {
-        document.getElementById('save-message')?.classList.add('hidden')
-        }, 2000);
-    }
+        const result = await response.json();
 
-    setPartObjArr(prev =>
-        prev.map(part => (
-        { ...part, flag: "none" }
-        ))
-    )  // sets each of the item's flag to none.
+        if (result.success) {
+            console.log('Parts updated successfully');
+        } else {
+            console.error('Failed to update parts');
+        }
     } catch (error) {
-    console.error('Network or unexpected error:', error);
+        console.error('Error updating parts:', error);
     }
+}, 2000);
+
+const onPartInfoChange = async (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
+    const { name, value } = e.target;
+    if (index === undefined) return;
+
+    setPartObjArr(prev => {
+        const updatedParts = [...prev];
+        updatedParts[index] = {
+            ...updatedParts[index],
+            [name]: value
+        };
+
+        debouncedSave(updatedParts[index]);
+
+        return updatedParts;
+    });
 };
 
-const onDayjobInfoChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-{
-    const { name, value } = e.target
-    setDayjob(prev => (
-    { ...prev, [name]: value }
-    ))
-}
+useEffect(() => {
+    if (dayjob_id) {
+        getParts(parseInt(dayjob_id));
+    }
+}, [dayjob_id])
 
 return (
     <div id="page" className="flex justify-center">
-    <div id="page-content">
+        <div id="page-content">
 
-        <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
+            <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
 
-        <div className="flex gap-10 pt-10">
-        <div className="" id="dj-input">
-            <label className="font-bold mr-2">DJ No</label>
-            <InputTemplate label="DJ No" name="dayjob_num" id="dj-num" onChange={onDayjobInfoChange} />
-        </div>
-        <div className="" id="serial-input">
-            <label htmlFor="dayjob_serial_num" className="mr-2 font-bold">Serial No</label>
-            <InputTemplate label="Serial No" name="dayjob_serial_num" id="dj-serial-num" onChange={onDayjobInfoChange} />
-        </div>
-        </div>
-
-        <div className="flex justify-center mt-10" id="dropdown-flex-container">
-        <div id="dropdown" className=""> 
-            <PartsSelector onAddClick={handleAddPart} />
-        </div>
-        </div>
-
-        <div className=" flex justify-center mt-5 h-[20px]">
-        <label className="hidden text-green-600 font-bold text-xl" id="save-message">
-            Saved!
-        </label>
-        </div>
-
-        <div className="mt-15 flex flex-col gap-y-10" id="parts-list">
-
-        {
-            partObjArr.map((Part, idx) =>
-            {
-            return (
-                <div className="flex items-center" key={idx}>
-                <HWPart
-                    partObj={Part}
-                    index={idx}
-                    setParts={setPartObjArr}
-                    setDayjob={setDayjob}
-                />
+            <div className="flex gap-10 pt-10">
+                <div>
+                    <label className="font-bold mr-2">DJ No</label>
+                    <InputTemplate readOnly={true} />
                 </div>
-            )
+                <div>
+                    <label htmlFor="dayjob_serial_num" className="mr-2 font-bold">Serial No</label>
+                    <InputTemplate readOnly={true} />
+                </div>
+            </div>
+
+            <div className="flex justify-center mt-10" id="dropdown-flex-container">
+                <div id="dropdown" className=""> 
+                    <PartsSelector onAddClick={handleAddPart} />
+                </div>
+            </div>
+
+            <div className=" flex justify-center mt-5 h-[20px]">
+                <label className="hidden text-green-600 font-bold text-xl" id="save-message">
+                    Saved!
+                </label>
+            </div>
+
+            <div className="mt-15 flex flex-col gap-y-10" id="parts-list">
+
+            {
+                partObjArr.map((Part, idx) =>
+                {
+                return (
+                    <div className="flex items-center" key={idx}>
+                        <HWPart
+                            partObj={Part}
+                            index={idx}
+                            setParts={setPartObjArr}
+                            onChange={(e) => onPartInfoChange(e, idx)}
+                        />
+                    </div>
+                )
+                }
+                )
             }
-            )
-        }
 
+            </div>
 
         </div>
-
-        <div id="button-div" className="mt-5 flex justify-end">
-        <button onClick={handleSave} type="submit" className="cursor-pointer">Save</button>
-        </div>
-
-    </div>
     </div>
 )
 
