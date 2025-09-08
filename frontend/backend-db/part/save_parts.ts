@@ -1,5 +1,4 @@
 import mysql, { ConnectionOptions } from "mysql2";
-import { Part } from "../../src/Objects/Part";
 
 const access: ConnectionOptions = {
     user: 'root',
@@ -8,36 +7,24 @@ const access: ConnectionOptions = {
     port: 3306,
 };
 
-export async function save_parts(parts: Part[]) {
+export async function insert_part_once(dayjob_id: number, part_type: string) {
     const conn = await mysql.createConnection(access).promise();
-
-    const toInsert = [];
-
-    for (const part of parts) {
-            const { part_type, part_number, part_serial_number, dayjob_id, flag } = part;
-            if (flag === "insert") {
-                toInsert.push({ part_type, part_number, part_serial_number, dayjob_id });
-            }
-        }
-
-    if (toInsert.length) {
-        try {
-        const sql: string = `INSERT INTO PARTS (part_type, part_number, part_serial_number, dayjob_id)
-        VALUES (?, ?, ?, ?)`;
-            await conn.query(sql, [[toInsert]]);
+    const sql = `INSERT INTO PARTS (dayjob_id, part_type) VALUES (?, ?)`;
+    try {
+        const [execResult] = await conn.query<mysql.ResultSetHeader>(sql, [dayjob_id, part_type]);
 
         return {
             status: 200,
-            success: true
-        };
-        } catch (err) {
-            console.error('erroring when inserting parts: ', err);
-            return {
-                status: 500,
-                success: false
-            };
-        } finally {
-            conn.end();
+            success: true,
+            part_id: execResult.insertId
         }
+    } catch (error) {
+        console.error('Error saving part:', error);
+        return {
+            status: 500,
+            success: false
+        };
+    } finally {
+        conn.end();
     }
 }

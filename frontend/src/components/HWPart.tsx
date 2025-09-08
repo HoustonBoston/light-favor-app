@@ -31,13 +31,21 @@ export default function HWPart ({
                         <label className="mr-2 font-bold">
                             Part No
                         </label>
-                        <InputTemplate onChange={onChange} name="part_number" />
+                        <InputTemplate 
+                        readOnly={false} 
+                        onChange={onChange}
+                        placeholder="Enter part number" 
+                        name="part_number" />
                     </div>
                     <div className="ml-2" id="serial-field">
                         <label className="mr-2 font-bold">
                             Serial No
                         </label>
-                        <InputTemplate onChange={onChange} name="part_serial_number" />
+                        <InputTemplate
+                        placeholder="Enter part serial number" 
+                        readOnly={false} 
+                        onChange={onChange} 
+                        name="part_serial_number" />
                     </div>
                 </div>
             </div>

@@ -30,8 +30,24 @@ const handleAddPart = async () =>
 
     if (dropdown) {
         const selectedPart = dropdown.value;
-        const newPart: Part = { part_type: selectedPart, part_number: null, part_serial_number: null, flag: "insert" as Flag };
+        const response = await fetch('http://localhost:3000/api/insert_part_once', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ dayjob_id: parseInt(dayjob_id), part_type: selectedPart }),
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            console.error('Failed to add part');
+            return;
+        }
+
+        const newPart: Part = { part_id: result.part_id, part_type: selectedPart, part_number: null, part_serial_number: null, flag: "insert" as Flag };
         setPartObjArr([...partObjArr, newPart])
+        console.log('Added new part:', newPart);
     }
 };
 
@@ -52,9 +68,9 @@ const getParts = async (dayjob_id: number) => {
     }
 }
 
-const debouncedSave = debounce(async (part: Part) => {
+const debouncedUpdate = debounce(async (part: Part) => {
     try {
-        const response = await fetch('http://localhost:3000/api/update_part', {
+        const response = await fetch('http://localhost:3000/api/update_part_info', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -84,9 +100,8 @@ const onPartInfoChange = async (e: React.ChangeEvent<HTMLInputElement>, index?: 
             ...updatedParts[index],
             [name]: value
         };
-
-        debouncedSave(updatedParts[index]);
-
+        
+        debouncedUpdate(updatedParts[index]);
         return updatedParts;
     });
 };
