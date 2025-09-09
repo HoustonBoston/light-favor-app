@@ -6,23 +6,21 @@ export default function InputTemplate ({ id, onChange, name, value, readOnly, pl
         id?: string,
         onChange?: (e: React.ChangeEvent<HTMLInputElement>, index?: number) => void,
         name?: string,
-        value?: string | number,
+        value?: number | undefined,
         readOnly?: boolean,
         placeholder?: string
     })
 {
     return (
-            <Input
-                display="inherit"
+            <input
                 onChange={onChange}
                 required
                 placeholder={placeholder}
-                className="placeholder:text-center placeholder:text-black text-center"
-                variant="subtle"
+                className="outline placeholder:text-center placeholder:text-black text-center"
                 id={id}
                 name={name}
                 onClick={(e) => e.stopPropagation()}
-                value={value}
+                value={value ?? ''}
                 readOnly={readOnly}
             />
     )

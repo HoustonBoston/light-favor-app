@@ -10,25 +10,24 @@ import {debounce} from "lodash";
 import { Part, Flag } from "@/Objects/Part";
 
 import { useUser } from "@/context/UserContext";
+import { useParams } from "next/navigation";
+import { useDayjob } from "@/context/DayjobContext";
 
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
-function Page ({
-    params,
-}: { params: Promise<{ dayjob_id: string }> }) {
-    const { dayjob_id } = React.use(params)
+function Page () {
+    const params = useParams<{ dayjob_id: string }>()
+    const dayjob_id = params.dayjob_id
     const [user, setUser] = useUser()
     const [partObjArr, setPartObjArr] = useState<Part[]>([])
-    const [dayjobFields, setDayjobFields] = useState<{ dayjob_num: number | null, dayjob_serial_num: number | null, dayjob_id: number | null }>({
-        dayjob_num: null,
-        dayjob_serial_num: null,
-        dayjob_id: dayjob_id ? parseInt(dayjob_id) : null
-})
+    const [dayjob, setDayjob] = useDayjob()
 
 const handleAddPart = async () =>
 {
     const dropdown = document.getElementById('parts-dropdown') as HTMLSelectElement;
+    console.log('trying to adding part of type:', dropdown.value);
 
     if (dropdown) {
+        console.log('trying to adding part of type:', dropdown.value);
         const selectedPart = dropdown.value;
         const response = await fetch('http://localhost:3000/api/insert_part_once', {
             method: 'POST',
@@ -88,7 +87,7 @@ const debouncedUpdate = debounce(async (part: Part) => {
     } catch (error) {
         console.error('Error updating parts:', error);
     }
-}, 2000);
+}, 1000);
 
 const onPartInfoChange = async (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
     const { name, value } = e.target;
@@ -106,6 +105,23 @@ const onPartInfoChange = async (e: React.ChangeEvent<HTMLInputElement>, index?: 
     });
 };
 
+const handleDeletePart = async (part_id: number, index: number) => {
+    setPartObjArr(prev => prev.filter((_, i) => i !== index));
+
+    const result = await fetch('http://localhost:3000/api/delete_part', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ part_id })
+    });
+
+    const data = await result.json();
+    if (!data.success) {
+        console.error('Failed to delete part');
+    }
+}
+
 useEffect(() => {
     if (dayjob_id) {
         getParts(parseInt(dayjob_id));
@@ -121,11 +137,11 @@ return (
             <div className="flex gap-10 pt-10">
                 <div>
                     <label className="font-bold mr-2">DJ No</label>
-                    <InputTemplate readOnly={true} />
+                    <InputTemplate readOnly={true} value={dayjob!.dayjob_number} />
                 </div>
                 <div>
-                    <label htmlFor="dayjob_serial_num" className="mr-2 font-bold">Serial No</label>
-                    <InputTemplate readOnly={true} />
+                    <label htmlFor="dayjob_serial_number" className="mr-2 font-bold">Serial No</label>
+                    <InputTemplate readOnly={true} value={dayjob!.dayjob_serial_number} />
                 </div>
             </div>
 
@@ -151,8 +167,10 @@ return (
                         <HWPart
                             partObj={Part}
                             index={idx}
-                            setParts={setPartObjArr}
+                            handleDelete={() => handleDeletePart(Part.part_id!, idx)}
                             onChange={(e) => onPartInfoChange(e, idx)}
+                            part_number={Part.part_number}
+                            part_serial_number={Part.part_serial_number}
                         />
                     </div>
                 )

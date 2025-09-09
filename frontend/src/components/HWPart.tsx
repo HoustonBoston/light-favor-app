@@ -7,19 +7,16 @@ import { Part } from "@/Objects/Part"
 import { Dayjob } from "@/Objects/Dayjob"
 
 export default function HWPart ({
-    partObj, setParts, index, onChange
+    partObj, handleDelete, index, onChange, part_number, part_serial_number
 }: {
     partObj: Part,
-    setParts: React.Dispatch<React.SetStateAction<Part[]>>,
     index: number,
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    part_number: number | null,
+    part_serial_number: number | null,
+    handleDelete: () => void
 })
 {
-    const handleDelete = () =>
-    {
-        setParts(prev => prev.filter((_, i) => i !== index))
-    }
-
     return (
         <>
             <div id="box" className="w-[550px] border-solid border-blue-300 border-2 h-[75px] rounded-2xl">
@@ -34,18 +31,22 @@ export default function HWPart ({
                         <InputTemplate 
                         readOnly={false} 
                         onChange={onChange}
-                        placeholder="Enter part number" 
-                        name="part_number" />
+                        placeholder="Enter number" 
+                        name="part_number"
+                        value={part_number ?? undefined}
+                        />
                     </div>
                     <div className="ml-2" id="serial-field">
                         <label className="mr-2 font-bold">
                             Serial No
                         </label>
                         <InputTemplate
-                        placeholder="Enter part serial number" 
+                        placeholder="Enter serial number" 
                         readOnly={false} 
                         onChange={onChange} 
-                        name="part_serial_number" />
+                        name="part_serial_number" 
+                        value={part_serial_number ?? undefined}
+                        />
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ export async function delete_part (part_id: number) {
     const conn = await mysql.createConnection(access).promise();
 
     try {
-        const sql: string = `DELETE FROM PARTS WHERE id = ?`;
+        const sql: string = `DELETE FROM PARTS WHERE part_id = ?`;
         await conn.query(sql, [part_id]);
 
         return {

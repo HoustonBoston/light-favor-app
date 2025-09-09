@@ -9,13 +9,14 @@ import { useRouter } from "next/navigation";
 import DayjobField from "@/components/DayjobField";
 
 import {debounce} from "lodash";
+import { useDayjob } from "@/context/DayjobContext";
 
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
 function Page ()
 {
   const [user, setUser] = useUser()
-  const router = useRouter();
   const [dayjobArr, setDayjobArr] = useState<Dayjob[]>([])  // TODO: use context, it's better
+  const [dayjob, setDayjob] = useDayjob()
 
   // fetch the dayjob list from backend based on the user id
   useEffect(() =>
@@ -111,6 +112,24 @@ function Page ()
     debouncedSave(dayjobArr[index])
   }
 
+  const handleDayjobDelete = async (dayjob_id: number) =>
+  {
+    setDayjobArr(prev => prev.filter(dj => dj.dayjob_id !== dayjob_id));
+
+    const result = await fetch('http://localhost:3000/api/delete_dayjob', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ dayjob_id })
+    });
+
+    const data = await result.json();
+    if (!data.success) {
+      console.error('Failed to delete dayjob');
+    }
+  }
+
   return (
     <div id="page" className="flex justify-center">
       <div id="page-content">
@@ -132,19 +151,19 @@ function Page ()
             {
               return (
                 <div className="flex items-center" key={idx}>
-                  <DayjobField Dj={Dj} onDayjobInfoChange={(e) => onDayjobInfoChange(e, idx)} />
+                  <DayjobField 
+                  Dj={Dj} 
+                  onDayjobInfoChange={(e) => onDayjobInfoChange(e, idx)} 
+                  onDelete={() => handleDayjobDelete(Dj.dayjob_id!)} 
+                  />
                 </div>
               )
-            }
-            )
+            })
           }
-
         </div>
-
       </div>
     </div>
   )
-
 }
 
 export default Page;
