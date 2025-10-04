@@ -1,10 +1,12 @@
 import mysql, { ConnectionOptions } from 'mysql2';
 
+import 'dotenv/config';
+
 const access: ConnectionOptions = {
-    user: 'root',
-    database: 'DAYJOB',
-    host: 'localhost',
-    port: 3306,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
 };
 
 export async function delete_dayjob (dayjob_id: number) {
