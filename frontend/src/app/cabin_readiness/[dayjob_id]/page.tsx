@@ -13,6 +13,8 @@ import { useUser } from "@/context/UserContext";
 import { useParams } from "next/navigation";
 import { useDayjob } from "@/context/DayjobContext";
 
+import 'dotenv/config';
+
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
 function Page () {
     const params = useParams<{ dayjob_id: string }>()
@@ -20,6 +22,8 @@ function Page () {
     const [user, setUser] = useUser()
     const [partObjArr, setPartObjArr] = useState<Part[]>([])
     const [dayjob, setDayjob] = useDayjob()
+
+    const tailscale_url = process.env.TAILSCALE_URL || "roshan-dell.taile3e522.ts.net"
 
 const handleAddPart = async () =>
 {
@@ -29,7 +33,7 @@ const handleAddPart = async () =>
     if (dropdown) {
         console.log('trying to adding part of type:', dropdown.value);
         const selectedPart = dropdown.value;
-        const response = await fetch('http://localhost:3000/api/insert_part_once', {
+        const response = await fetch(`http://${tailscale_url}:3000/api/insert_part_once`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +56,7 @@ const handleAddPart = async () =>
 
 const getParts = async (dayjob_id: number) => {
     // Fetch parts for the given dayjob_id
-    const response = await fetch('http://localhost:3000/api/get_parts', {
+    const response = await fetch(`http://${tailscale_url}:3000/api/get_parts`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -69,7 +73,7 @@ const getParts = async (dayjob_id: number) => {
 
 const debouncedUpdate = debounce(async (part: Part) => {
     try {
-        const response = await fetch('http://localhost:3000/api/update_part_info', {
+        const response = await fetch(`http://${tailscale_url}:3000/api/update_part_info`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -108,7 +112,7 @@ const onPartInfoChange = async (e: React.ChangeEvent<HTMLInputElement>, index?: 
 const handleDeletePart = async (part_id: number, index: number) => {
     setPartObjArr(prev => prev.filter((_, i) => i !== index));
 
-    const result = await fetch('http://localhost:3000/api/delete_part', {
+    const result = await fetch(`http://${tailscale_url}:3000/api/delete_part`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

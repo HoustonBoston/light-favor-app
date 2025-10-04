@@ -5,6 +5,7 @@ const access: ConnectionOptions = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
+    password: process.env.DB_PASSWORD
 };
 
 export async function get_parts (dayjob_id: number) {

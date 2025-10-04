@@ -11,6 +11,8 @@ import DayjobField from "@/components/DayjobField";
 import {debounce} from "lodash";
 import { useDayjob } from "@/context/DayjobContext";
 
+import 'dotenv/config';
+
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
 function Page ()
 {
@@ -18,13 +20,15 @@ function Page ()
   const [dayjobArr, setDayjobArr] = useState<Dayjob[]>([])  // TODO: use context, it's better
   const [dayjob, setDayjob] = useDayjob()
 
+  const tailscale_url = process.env.TAILSCALE_URL || "roshan-dell.taile3e522.ts.net"
+
   // fetch the dayjob list from backend based on the user id
   useEffect(() =>
   {
     console.log('fetching dayjobs for user id:', user!.user_id)
     const fetchDayjobs = async () =>
     {
-      const response = await fetch(`http://localhost:3000/api/get_dayjobs`, 
+      const response = await fetch(`http://${tailscale_url}:3000/api/get_dayjobs`, 
         {
           method: 'POST',
           headers: {
@@ -48,7 +52,7 @@ function Page ()
     // then retrieve the id and push to the dayjob array
     console.log('trying to add new dayjob to DB');
 
-    const result = await fetch('http://localhost:3000/api/insert_dayjob_once',
+    const result = await fetch(`http://${tailscale_url}:3000/api/insert_dayjob_once`,
       {
         method: 'POST',
         headers: {
@@ -95,7 +99,7 @@ function Page ()
       async (updatedDayjob: Dayjob) => {
         try {
           console.log("trying to update dayjob")
-          const response = await fetch('http://localhost:3000/api/update_dayjob_info', {
+          const response = await fetch(`http://${tailscale_url}:3000/api/update_dayjob_info`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -116,7 +120,7 @@ function Page ()
   {
     setDayjobArr(prev => prev.filter(dj => dj.dayjob_id !== dayjob_id));
 
-    const result = await fetch('http://localhost:3000/api/delete_dayjob', {
+    const result = await fetch(`http://${tailscale_url}:3000/api/delete_dayjob`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

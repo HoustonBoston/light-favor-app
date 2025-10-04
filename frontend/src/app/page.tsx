@@ -7,10 +7,14 @@ import { jwtDecode } from "jwt-decode"
 
 import { useUser } from "@/context/UserContext"
 
+import "dotenv/config";
+
 export default function LoginPage ()
 {
     const router = useRouter()
     const [user, setUser] = useUser()
+
+    const tailscale_url = process.env.TAILSCALE_URL || "roshan-dell.taile3e522.ts.net"
 
     return (
         <div className="h-screen flex justify-center items-center" id="login-info">
@@ -21,7 +25,7 @@ export default function LoginPage ()
                     console.log('decoded', decoded)
                     document.cookie = `jwtLogin=${String(decoded.email)}`  // ignore underline because email does exist. Will be used for middleware.js
 
-                    fetch('http://localhost:3000/api/get_user_id',  // TODO: define an api route
+                    fetch(`http://${tailscale_url}:3000/api/get_user_id`,  // TODO: define an api route
                         {
                             method: 'POST',
                             headers: {
