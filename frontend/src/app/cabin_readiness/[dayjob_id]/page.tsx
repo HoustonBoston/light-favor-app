@@ -133,55 +133,61 @@ useEffect(() => {
 }, [dayjob_id])
 
 return (
-    <div id="page" className="flex justify-center">
-        <div id="page-content">
+    <div id="page" className="flex justify-center min-h-screen">
+        <div id="page-content" className="w-full max-w-4xl">
 
-            <h1 className="text-center text-2xl font-bold">Cabin Readiness</h1>
+            {/* Fixed Header Section */}
+            <div className="sticky top-16 bg-white z-10 pb-4 border-b border-gray-200">
+                <h1 className="text-center text-2xl font-bold py-4">Cabin Readiness</h1>
 
-            <div className="flex gap-10 pt-10">
-                <div>
-                    <label className="font-bold mr-2">DJ No</label>
-                    <InputTemplate readOnly={true} value={dayjob!.dayjob_number} />
-                </div>
-                <div>
-                    <label htmlFor="dayjob_serial_number" className="mr-2 font-bold">Serial No</label>
-                    <InputTemplate readOnly={true} value={dayjob!.dayjob_serial_number} />
-                </div>
-            </div>
-
-            <div className="flex justify-center mt-10" id="dropdown-flex-container">
-                <div id="dropdown" className=""> 
-                    <PartsSelector onAddClick={handleAddPart} />
-                </div>
-            </div>
-
-            <div className=" flex justify-center mt-5 h-[20px]">
-                <label className="hidden text-green-600 font-bold text-xl" id="save-message">
-                    Saved!
-                </label>
-            </div>
-
-            <div className="mt-15 flex flex-col gap-y-10" id="parts-list">
-
-            {
-                partObjArr.map((Part, idx) =>
-                {
-                return (
-                    <div className="flex items-center" key={idx}>
-                        <HWPart
-                            partObj={Part}
-                            index={idx}
-                            handleDelete={() => handleDeletePart(Part.part_id!, idx)}
-                            onChange={(e) => onPartInfoChange(e, idx)}
-                            part_number={Part.part_number}
-                            part_serial_number={Part.part_serial_number}
-                        />
+                <div className="flex gap-10 justify-center">
+                    <div className="flex items-center">
+                        <label className="font-bold mr-2">DJ No</label>
+                        <InputTemplate readOnly={true} value={dayjob!.dayjob_number} />
                     </div>
-                )
-                }
-                )
-            }
+                    <div className="flex items-center">
+                        <label htmlFor="dayjob_serial_number" className="mr-2 font-bold">Serial No</label>
+                        <InputTemplate readOnly={true} value={dayjob!.dayjob_serial_number} />
+                    </div>
+                </div>
 
+                <div className="flex justify-center mt-6" id="dropdown-flex-container">
+                    <div id="dropdown"> 
+                        <PartsSelector onAddClick={handleAddPart} />
+                    </div>
+                </div>
+
+                <div className="flex justify-center mt-3 h-[20px]">
+                    <label className="hidden text-green-600 font-bold text-xl" id="save-message">
+                        Saved!
+                    </label>
+                </div>
+            </div>
+
+            {/* Scrollable Parts Section */}
+            <div className="pt-8 pb-8">
+                <div className="flex flex-col gap-y-6" id="parts-list">
+
+                {
+                    partObjArr.map((Part, idx) =>
+                    {
+                    return (
+                        <div className="flex items-center justify-center" key={Part.part_id || `temp-${idx}`}>
+                            <HWPart
+                                partObj={Part}
+                                index={idx}
+                                handleDelete={() => handleDeletePart(Part.part_id!, idx)}
+                                onChange={(e) => onPartInfoChange(e, idx)}
+                                part_number={Part.part_number}
+                                part_serial_number={Part.part_serial_number}
+                            />
+                        </div>
+                    )
+                    }
+                    )
+                }
+
+                </div>
             </div>
 
         </div>

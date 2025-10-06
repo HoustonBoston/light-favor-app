@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/NavBar/NavBar";
+import ConditionalNavBar from "@/components/ConditionalNavBar";
 
 // providers
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -38,7 +38,7 @@ export default function RootLayout ({
         <GoogleOAuthProvider clientId="66052139702-l6jplgkm0kog6m2i58b97qjeq7i97dp9.apps.googleusercontent.com">
           <DayjobProvider>
             <UserProvider>
-              <NavBar />
+              <ConditionalNavBar />
               <main className="pt-14">
                 {children}
               </main>

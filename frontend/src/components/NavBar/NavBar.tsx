@@ -9,13 +9,12 @@ function NavBar ()
 {
     return (
         <header className="shadow shadow-neutral-500 fixed duration-100 w-full h-12 bg-blue-200 z-20" id="top-navbar">
-            <div className="flex flex-row justify-between w-full h-full items-center outline px-4">
-                <Image alt="LNW Logo" src={lnwImage.src} width={110} height={12} />
+            <div className="flex flex-row justify-between w-full h-full items-center outline px-4 relative">
+                <Image alt="LNW Logo" src={lnwImage.src} width={110} height={48} className="h-12 w-auto" />
                 <input
-                    className="focus:outline-none w-2x bg-amber-50 rounded-2xl placeholder:text-center placeholder:cursor-auto
-                        text-center placeholder:text-black"
+                    className="focus:outline-none w-64 bg-amber-50 rounded-2xl placeholder:text-center placeholder:cursor-auto
+                        text-center placeholder:text-black absolute left-1/2 transform -translate-x-1/2"
                     placeholder="Search DJ ID"
-                    width={200}
                     required
                 />
                 <div className="flex gap-4 text-black">
