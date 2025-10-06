@@ -39,7 +39,7 @@ export default function RootLayout ({
           <DayjobProvider>
             <UserProvider>
               <ConditionalNavBar />
-              <main className="pt-14">
+              <main>
                 {children}
               </main>
             </UserProvider>

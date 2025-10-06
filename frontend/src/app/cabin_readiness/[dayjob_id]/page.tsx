@@ -133,11 +133,11 @@ useEffect(() => {
 }, [dayjob_id])
 
 return (
-    <div id="page" className="flex justify-center min-h-screen">
+    <div id="page" className="flex justify-center min-h-screen pt-12">
         <div id="page-content" className="w-full max-w-4xl">
 
             {/* Fixed Header Section */}
-            <div className="sticky top-16 bg-white z-10 pb-4 border-b border-gray-200">
+            <div className="sticky bg-white z-10 pb-4 border-b border-gray-200">
                 <h1 className="text-center text-2xl font-bold py-4">Cabin Readiness</h1>
 
                 <div className="flex gap-10 justify-center">
