@@ -13,7 +13,7 @@ export default function PartsSelector ({
             <tbody>
                 <tr>
                     <td>
-                        <select name="Parts" id="parts-dropdown" className="outline">
+                        <select name="Parts" id="parts-dropdown" className="outline text-center">
                             <option value="CPU">CPU</option>
                             <option value="HDD">HDD</option>
                             <option value="Topper">Topper</option>

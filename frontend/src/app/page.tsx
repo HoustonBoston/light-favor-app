@@ -12,7 +12,7 @@ import "dotenv/config";
 export default function LoginPage ()
 {
     const router = useRouter()
-    const [user, setUser] = useUser()
+    const [_, setUser] = useUser()
 
     const tailscale_url = process.env.TAILSCALE_URL || "roshan-dell.taile3e522.ts.net"
 

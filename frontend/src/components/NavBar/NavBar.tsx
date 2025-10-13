@@ -2,11 +2,22 @@ import Link from "next/link"
 import { Input } from "@chakra-ui/input"
 import lnwImage from "../../app/LnW-Image.png"
 import Image from "next/image"
+import { useUser } from "@/context/UserContext"
+import { useRouter } from "next/navigation"
+
 
 
 // TODO: add search functionality   
 function NavBar ()
 {
+    const [user] = useUser()
+    const router = useRouter()
+    
+    const isLoggedIn = () => {
+        if (!user)
+            router.push('/')
+    }
+
     return (
         <header className="shadow shadow-neutral-500 fixed duration-100 w-full h-12 bg-blue-200 z-20" id="top-navbar">
             <div className="flex flex-row justify-between w-full h-full items-center outline px-4 relative">
@@ -18,7 +29,7 @@ function NavBar ()
                     required
                 />
                 <div className="flex gap-4 text-black">
-                    <Link href="/">Home</Link>
+                    <a onClick={isLoggedIn} className="cursor-pointer">Login</a>
                     <Link href="/cabin_readiness">Cabin Readiness</Link>
                     <Link href="/login">Test Area</Link>
                     <Link href="/login">Hospital</Link>

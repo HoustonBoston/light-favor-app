@@ -19,9 +19,8 @@ import 'dotenv/config';
 function Page () {
     const params = useParams<{ dayjob_id: string }>()
     const dayjob_id = params.dayjob_id
-    const [user, setUser] = useUser()
     const [partObjArr, setPartObjArr] = useState<Part[]>([])
-    const [dayjob, setDayjob] = useDayjob()
+    const [dayjob] = useDayjob()
 
     const tailscale_url = process.env.TAILSCALE_URL || "roshan-dell.taile3e522.ts.net"
 

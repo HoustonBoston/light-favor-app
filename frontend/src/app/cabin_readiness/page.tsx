@@ -1,24 +1,20 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
-import InputTemplate from "../../components/InputTemplate"
 import { Dayjob } from "@/Objects/Dayjob";
 
 import { useUser } from "@/context/UserContext";
-import { useRouter } from "next/navigation";
 import DayjobField from "@/components/DayjobField";
 
 import {debounce} from "lodash";
-import { useDayjob } from "@/context/DayjobContext";
 
 import 'dotenv/config';
 
 // shows a list of the dayjobs and allows user to click on it to see parts in the dayjob
 function Page ()
 {
-  const [user, setUser] = useUser()
+  const [user] = useUser()
   const [dayjobArr, setDayjobArr] = useState<Dayjob[]>([])  // TODO: use context, it's better
-  const [dayjob, setDayjob] = useDayjob()
 
   const tailscale_url = process.env.TAILSCALE_URL || "roshan-dell.taile3e522.ts.net"
 
@@ -99,7 +95,7 @@ function Page ()
       async (updatedDayjob: Dayjob) => {
         try {
           console.log("trying to update dayjob")
-          const response = await fetch(`http://${tailscale_url}:3000/api/update_dayjob_info`, {
+          await fetch(`http://${tailscale_url}:3000/api/update_dayjob_info`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
